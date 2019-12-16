@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    <head>
+        {include file="common/head" /}
+    </head>
+    <body>
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body ">
+                            <blockquote class="layui-elem-quote">欢迎管理员：
+                                <span class="x-red">{$user.nickname}</span>！
+                                当前时间:<span id="show_time"></span>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">数据统计</div>
+                        <div class="layui-card-body ">
+                            <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
+                                <li class="layui-col-md2 layui-col-xs6">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>文章数</h3>
+                                        <p>
+                                            <cite>66</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-md2 layui-col-xs6">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>会员数</h3>
+                                        <p>
+                                            <cite>12</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-md2 layui-col-xs6">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>回复数</h3>
+                                        <p>
+                                            <cite>99</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-md2 layui-col-xs6">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>商品数</h3>
+                                        <p>
+                                            <cite>67</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-md2 layui-col-xs6">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>文章数</h3>
+                                        <p>
+                                            <cite>67</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-md2 layui-col-xs6 ">
+                                    <a href="javascript:;" class="x-admin-backlog-body">
+                                        <h3>文章数</h3>
+                                        <p>
+                                            <cite>6766</cite></p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">系统信息</div>
+                        <div class="layui-card-body ">
+                            <table class="layui-table">
+                                <tbody>
+                                <tr>
+                                    <th>版本号</th>
+                                    <td>1.0.01</td></tr>
+                                <tr>
+                                    <th>服务器地址</th>
+                                    <td>whatgoingon.cn</td></tr>
+                                <tr>
+                                    <th>操作系统</th>
+                                    <td>Linux</td></tr>
+                                <tr>
+                                    <th>运行环境</th>
+                                    <td>httpd-2.4.6-89.el7.centos.1.x86_64</td></tr>
+                                <tr>
+                                    <th>PHP版本</th>
+                                    <td>7.0.33</td></tr>
+                                <tr>
+                                    <th>PHP运行方式</th>
+                                    <td>cgi-fcgi</td></tr>
+                                <tr>
+                                    <th>MYSQL版本</th>
+                                    <td>7.0.33</td></tr>
+                                <tr>
+                                    <th>ThinkPHP</th>
+                                    <td>5.0.18</td></tr>
+                                <tr>
+                                    <th>上传附件限制</th>
+                                    <td>2M</td></tr>
+                                <tr>
+                                    <th>执行时间限制</th>
+                                    <td>30s</td></tr>
+                                <tr>
+                                    <th>剩余空间</th>
+                                    <td>未知</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-header">开发团队</div>
+                        <div class="layui-card-body ">
+                            <table class="layui-table">
+                                <tbody>
+                                <tr>
+                                    <th>版权所有</th>
+                                    <td>
+                                        YUNHAI
+                                        <a href="http://whatgoingon.cn/" target="_blank">访问主页</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>开发者</th>
+                                    <td>YUNHAI</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <style id="welcome_style"></style>
+                <div class="layui-col-md12">
+                    <blockquote class="layui-elem-quote layui-quote-nm">感谢<a href="https://www.layui.com/" target="_blank">layui</a>,百度Echarts,<a href="https://jquery.com/" target="_blank">jquery</a>,本系统由<a href="http://x.xuebingsi.com/" target="_blank">x-admin</a>提供技术支持。</blockquote></div>
+            </div>
+        </div>
+        <script>
+            function  getTime(){
+                var date=new Date();
+                var d1=date.toLocaleString();
+                var div1=document.getElementById("show_time");
+                div1.innerHTML =d1;
+            }
+            setInterval("getTime();",50);
+        </script>
+    </body>
+</html>

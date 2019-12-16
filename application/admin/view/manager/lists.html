@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    {include file="common/head" /}
+</head>
+<body>
+<style>
+    .layui-table-body {
+        overflow-x: hidden;
+    }
+</style>
+<div class="x-nav">
+          <span class="layui-breadcrumb">
+            <a href="">首页</a>
+            <a href="">系统管理</a>
+            <a>
+              <cite>管理员列表</cite></a>
+          </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+</div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form layui-col-space5">
+                        <div class="layui-inline layui-show-xs-block">
+                            <input class="layui-input" autocomplete="off" placeholder="开始日" name="start" id="start">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <input class="layui-input" autocomplete="off" placeholder="截止日" name="end" id="end">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <input type="text" name="username" placeholder="请输入登录名" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <button class="layui-btn" lay-submit lay-filter="table-search" id="table-search"><i
+                                    class="layui-icon">&#xe615;</i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-card-header">
+                    <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除
+                    </button>
+                    <button class="layui-btn" onclick="xadmin.open('添加用户','./admin-add.html',600,400)"><i
+                            class="layui-icon"></i>添加
+                    </button>
+                </div>
+                <div class="layui-card-body ">
+                    <table class="layui-table layui-form" id="demo" lay-filter="test"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="__STATIC__/js/jquery-2.1.4.min.js"></script>
+<script src="__STATIC__/js/common.js"></script>
+<script>
+    layui.use(['laydate', 'form', 'table'], function () {
+        var laydate = layui.laydate;
+        var form = layui.form;
+        var table = layui.table;
+        //执行一个laydate实例 默认值:type->date,fomat->yyyy-MM-dd
+        laydate.render({
+            elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#end' //指定元素
+        });
+
+        //执行渲染
+        table.render({
+            elem: '#demo'
+            , url: 'get_manager_list'
+            , page: true
+            , id: 'idTest'
+            , cols: [[
+                {checkbox: true}
+                , {field: 'id', title: 'ID', sort: true, width: 100}
+                , {field: 'username', title: '登录名', sort: true, width: 120}
+                , {field: 'nickname', title: '昵称', width: 120}
+                , {field: 'remark', title: '描述'}
+                , {field: 'role_id', title: '所属角色', width: 150}
+                , {field: 'login_ip', title: '登录IP', width: 140}
+                , {field: 'last_login_time', title: '上次登录时间', sort: true}
+                , {field: 'login_times', title: '登录次数', width: 100}
+                , {
+                    field: 'status', title: '状态', width: 100, templet: function (d) {
+                        if (d.status)
+                            return ' <span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span>';
+                        return '<span class="layui-btn layui-btn-normal layui-btn-mini layui-btn-disabled">已禁用</span>';
+                    }
+                }
+                , {field: 'create_time', title: '创建时间', sort: true}
+                , {
+                    field: 'right', title: '操作', templet: function (d) {
+                        if (d.id == 1 && d.username == 'admin') {
+                            return '超级管理员不允许操作';
+                        }
+                        var str = '<a href="javascript:;" title="禁用"><i class="layui-icon">&#xe601;</i></a>';
+                        if (d.status)
+                            str = '<a href="javascript:;" title="启用"><i class="layui-icon">&#xe62f;</i></a>';
+                        return str +
+                            '<a href="javascript:;" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>' +
+                            '<a href="javascript:;" title="删除" lay-event="delete"><i class="layui-icon">&#xe640;</i></a>';
+                    }
+                }
+            ]]
+            , initSort: {
+                //默认按照 id 倒序
+                field: 'id'
+                , type: 'asc'
+            }
+            , done: function (res, curr, count) {
+                //res:接口返回信息, curr:当前页码, count:数据总量
+                if (count == 0) {
+                    layer.msg('暂无相关信息');
+                }
+            }
+        })
+
+        //监听工具栏事件
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            switch (obj.event) {
+                case 'edit':
+                    break;
+                case 'delete':
+                    layer.confirm('确定要删除此管理员吗?', {icon: 3, title: '确认操作'}, function (index) {
+                        var url = 'del';
+                        var data = '';
+                        _ajax_send(url, data, 'get');
+                        layer.close(index); //关闭提示框
+                    });
+                    break;
+            }
+            ;
+        });
+
+        //监听排序事件
+        table.on('sort(test)', function (obj) {
+            //asc升序,desc降序,null 这里不需要null类型
+            if (obj.type != 'desc' && obj.type != 'asc') {
+                obj.type = 'asc';
+            }
+            table.reload('idTest', {
+                initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。 layui 2.1.1 新增参数
+                , where: {
+                    'order': obj.field + ' ' + obj.type
+                }
+            });
+        })
+
+        //监听搜索
+        form.on('submit(table-search)', function (data) {
+            table.reload('idTest', {
+                where: {
+                    'start': data.field.start
+                    , 'end': data.field.end
+                    , 'username': data.field.username
+                }
+            })
+            return false; //页面不刷新
+        })
+
+        //键盘事件(敲击回车键相当于点击搜索按钮)
+        $(document).keydown(function (e) {
+            if (e.keyCode == 13) {
+                document.getElementById("table-search").click();
+            }
+        })
+    });
+
+</script>
+
+</html>

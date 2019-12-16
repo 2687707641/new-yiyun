@@ -1,0 +1,27 @@
+<div class="left-nav">
+    <div id="side-nav">
+        <ul id="nav">
+            {volist name='menu' id='vo'}
+            {if $vo.pid == 0}
+            <li>
+                <a href="javascript:;">
+                    <i class="iconfont left-nav-li" lay-tips="{$vo.name}">{if empty($vo.icon)}&#xe74a;{else/}{$vo.icon}{/if}</i>
+                    <cite>{$vo.name}</cite>
+                    <i class="iconfont nav_right">&#xe697;</i></a>
+                {volist name='menu' id='son'}
+                {if $son.pid == $vo.id}
+                <ul class="sub-menu">
+                    <li>
+                        <a onclick="xadmin.add_tab('{$son.name}','{:url($son.url)}')">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>{$son.name}</cite></a>
+                    </li>
+                </ul>
+                {/if}
+                {/volist}
+            </li>
+            {/if}
+            {/volist}
+        </ul>
+    </div>
+</div>
