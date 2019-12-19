@@ -24,7 +24,7 @@ class Admin extends Controller
         if($this->request->isPost()){
             $rules = [
                 ['username','require|length:5,12','登录名不能为空|登录名在5~12字符之间'],
-                ['password','require|length:6,32','密码不能为空|密码长度为5~32字符之间']
+                ['password','require|length:6,16','密码不能为空|密码长度为6~16字符之间']
             ];
             $msg = $this->validate($this->request->post(),$rules);
             if($msg !== true) $this->error($msg);

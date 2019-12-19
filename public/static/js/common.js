@@ -167,6 +167,24 @@
 //     return false;
 // }
 
+$(function () {
+
+    //表单提交
+    $('.ajax_post').each(function (index,form) {
+        try{
+            $(form).submit(function (from) {
+                var data = $(form).serialize(), url = $(form).attr('action');
+                _ajax_send(url, data, 'post',true);
+                return false;
+            })
+        }catch (e) {
+            alert(e);
+            console.info('表单加载失败');
+        }
+    })
+
+})
+
 /**
  * AJAX 通用方法
  * @private
@@ -188,20 +206,22 @@ function _ajax_send(url,data,method,iframeReload = false) {
         },
         success :function (result) {
             //请求成功处理 result->返回数据, status->success
-            if(iframeReload){
-                //页面刷新
-                _jump(result);
-            }else{
-                //重载表格
-                var table = layui.table;
-                layer.msg(result.msg,{icon: 1, time: 500},function () {
-                    table.reload('idTest');
+            var table = layui.table;
+            if(result.code == 1) { //tp使用success方法
+                layer.msg(result.msg, {icon: 1, time: 500}, function () {
+                    if(iframeReload){
+                        tableReload();
+                    }else{
+                        table.reload('idTest');//重载表格
+                    }
                 });
+            }else{
+                layer.msg(result.msg, {icon: 2, time: 1000});
             }
         },
         error : function (xhr,status,error) {
             //错误处理 xhr->详细数据, status->error, error->错误提示
-            layer.msg(error,{icon: 2});
+            layer.msg('服务器出现异常,请检查后重试',{icon: 2});
         },
         complete: function () {
             //请求完成后
@@ -211,7 +231,7 @@ function _ajax_send(url,data,method,iframeReload = false) {
 }
 
 /***
- * 刷新当前iframe
+ * 刷新外层iframe
  */
 window._jump = function (data) {
     //先得到当前iframe层的索引
@@ -249,3 +269,17 @@ window._jump = function (data) {
         });
     }
 }
+
+/***
+ * 关闭当前弹窗,刷新外层iframe表格
+ */
+function tableReload() {
+    //先得到当前iframe层的索引
+    var index = parent.layer.getFrameIndex(window.name);
+    //再执行关闭
+    parent.layer.close(index);
+    //关闭父级页面的表格
+    parent.layui.table.reload('idTest');
+
+}
+

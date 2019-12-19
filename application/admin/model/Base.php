@@ -12,6 +12,10 @@ use think\Model;
  */
 class Base extends Model
 {
+
+    //定义公共参数
+    protected $_deleted = false; //是否从数据库中删除
+
     /***
      * 单个添加
      * @param $data 新增数据
@@ -36,11 +40,14 @@ class Base extends Model
     /***
      * 删除
      * @param $condition 删除条件
+     * @param $delete 是否从数据库中删除(默认将状态改为被删除)
      * @return bool true|false
      */
     public function del($condition)
     {
-        return $this->destory($condition);
+        if($this->_deleted)
+            return $this->destory($condition);
+        return $this->isUpdate(true)->allowField(true)->save(['deleted'=>1],$condition);
     }
 
     /***
@@ -53,5 +60,24 @@ class Base extends Model
         return $this->isUpdate(false)->allowField(true)->saveAll($data,false);
     }
 
+    /***
+     * 获取数据列表
+     * @param $conditon 过滤信息
+     * @return false|\PDOStatement|string|\think\Collection
+     */
+    public function get_data_list($conditon)
+    {
+        return $this->where($conditon['where'])->field('password', true)->order($conditon['order'])->limit($conditon['limit'])->select();
+    }
 
+    /***
+     * 获取数据条数
+     * @param $where 过滤条件
+     * @return int|string 数据条数
+     * @throws \think\Exception
+     */
+    public function get_data_count($where)
+    {
+        return $this->where($where)->count();
+    }
 }

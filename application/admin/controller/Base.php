@@ -23,6 +23,8 @@ class Base extends Controller
     protected $_param = []; //post参数及get参数
     protected $_map = []; //get参数
     protected $_row = 10; //分页初始条数
+    //筛选条件(LayUI表格用)
+    protected $_condition = [];
 
     //初始化加载
     public function _initialize()
@@ -33,9 +35,11 @@ class Base extends Controller
         $this->get_menu();
         //获取参数
         $this->_param = $this->request->param();
-        $this->_map = $this->request->get();
+        $this->_map   = $this->request->get();
+        $this->_condition = $this->get_condition();
+        Log::info('Condition信息' . print_r($this->_condition, true));
         //将公用数据分配至所有页面
-        $this->assign('user',$this->_user); //当前登录用户
+        $this->assign('user', $this->_user); //当前登录用户
         $this->assign('_self_', $this->request->url()); //当前页面对应控制器
     }
 
@@ -44,12 +48,11 @@ class Base extends Controller
     {
         //获取当前用户(管理员)信息
         $auth_info = Session::get('auth_info', 'think');
-        if(empty($auth_info)){
+        if (empty($auth_info)) {
             $this->redirect('Admin/login');
         }
         $group = new AuthGroupModel();
         $rule  = new AuthRuleModel();
-//        Log::write('登录用户信息: ' . print_r($auth_info,true));
         if ($auth_info['id'] == 1 && $auth_info['username'] == 'admin') {
             //获取所有权限
             $menu = $rule->cate_tree();
@@ -57,15 +60,15 @@ class Base extends Controller
             //查询权限列表
             $rules = $group->where('id', $auth_info['role_id'])->column('rules');
             $arr   = explode(',', $rules[0]);
-            $menu = $rule->where('id', 'in', $arr)->select();
+            $menu  = $rule->where('id', 'in', $arr)->select();
         }
-        if(empty($menu)){
+        if (empty($menu)) {
             $this->redirect('Admin/login');
         }
         $this->assign('menu', $menu);
     }
 
-    //读取权限
+    //读取菜单列表
     public function get_rule()
     {
         //获取当前用户(管理员)信息
@@ -77,8 +80,89 @@ class Base extends Controller
         if ($auth_info['id'] == 1 && $auth_info['username'] == 'admin') {
             return true;
         } else {
-            //检查权限
+            //检查菜单列表
 
         }
     }
+
+    /***
+     * @return bool 权限检查结果
+     */
+    public function check_authority()
+    {
+        $url = $this->request->controller() . '/' . $this->request->action(); //请求方法
+        //获取当前用户(管理员)信息
+        $auth_info = Session::get('auth_info', 'think');
+        if (empty($auth_info)) {
+            //重定向至登录界面
+            $this->redirect('Admin/login');
+        }
+        if ($auth_info['id'] == 1 && $auth_info['username'] == 'admin') {
+            return true;
+        }
+        //查询规则信息
+        $competency      = new AuthComModel();
+        $competency_info = $competency->where('url', $url)->find();
+        if (empty($competency_info)) return false;
+        //查询当前角色信息
+        $role      = new AuthGroupModel();
+        $role_info = $role->where('id', $auth_info['role_id'])->find();
+        $arr       = explode(',', $role_info->competency);
+        //判断是否拥有权限
+        foreach ($arr as $k => $v) {
+            if ($v == $competency_info->id)
+                return true;
+        }
+        return false;
+    }
+
+    /***
+     * 获取过滤条件
+     * @return array 过滤条件
+     */
+    public function get_condition()
+    {
+        $where  = array();
+        $page   = 1;
+        $offset = 10;
+        $order = 'id desc';
+        $between_time = ['1970-01-01','9999-12-30'];
+        foreach ($this->_map as $k => $v) {
+            switch ($k) {
+                case 'page' :
+                    $page = $v;
+                    break;
+                case 'limit' :
+                    $offset = $v;
+                    break;
+                case 'order':
+                    $order = $v;
+                    break;
+                case 'start':
+                   if (!empty($v)) $between_time[0] = $v;
+                    break;
+                case 'end':
+                    if (!empty($v)) $between_time[1] = $v;
+                    break;
+                case 'username':
+                    $where['username'] = ['like','%' . $v . '%'];
+                    break;
+                case 'role_name':
+                    $where['role_name'] = ['like','%' . $v . '%'];
+                    break;
+                case 'name':
+                    $where['name'] = ['like','%' . $v . '%'];
+                    break;
+            }
+        }
+        $where['create_time'] = ['between time',$between_time];
+        $limit = ($page - 1) * $offset . ',' . $offset;
+        $condition = array(
+            'where' => $where, //过滤条件
+            'order' => $order, //排序
+            'limit' => $limit, //分页参数
+        );
+        return $condition;
+    }
+
 }

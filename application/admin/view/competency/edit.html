@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+    {include file='common/head' /}
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row">
+        <form class="layui-form ajax_post" action="{$_self_}">
+            <div class="layui-form-item">
+                <label for="name" class="layui-form-label">
+                    <span class="x-red">*</span>规则名称
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" required="" lay-verify="required"
+                           autocomplete="off" class="layui-input" value="{$info['name']|default=''}">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <span class="x-red">*</span>必填
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="url" class="layui-form-label">
+                    <span class="x-red">*</span>规则路由
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="url" name="url" required="" lay-verify="required" placeholder="控制器/方法(控制器首字母大写)"
+                           autocomplete="off" class="layui-input" value="{$info['url']|default=''}">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <span class="x-red">*</span>必填
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="remark" class="layui-form-label">
+                    描述
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="remark" name="remark" required=""
+                           autocomplete="off" class="layui-input" value="{$info['remark']|default=''}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="" class="layui-form-label">
+                </label>
+                <button  class="layui-btn" lay-filter="add" lay-submit="">
+                    确认
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="__STATIC__/js/jquery-2.1.4.min.js"></script>
+<script src="__STATIC__/js/common.js"></script>
+<script>layui.use(['form', 'layer'],
+    function() {
+        $ = layui.jquery;
+        var form = layui.form,
+            layer = layui.layer;
+
+        //自定义验证规则
+        form.verify({
+            name: function(value) {
+                if (value.length < 2 || value > 10) {
+                    return '规则名称长度在3~10字符之间';
+                }
+            },
+        });
+    });
+</script>
+</body>
+
+</html>

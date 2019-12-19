@@ -13,7 +13,7 @@
                 <ul class="sub-menu">
                     <li>
                         <a onclick="xadmin.add_tab('{$son.name}','{:url($son.url)}')">
-                            <i class="iconfont">&#xe6a7;</i>
+                            <i class="iconfont">{if empty($son.icon)}&#xe6a7;{else/}{$son.icon}{/if}</i>
                             <cite>{$son.name}</cite></a>
                     </li>
                 </ul>

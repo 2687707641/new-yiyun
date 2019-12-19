@@ -13,7 +13,7 @@ class Manager extends Base
      * 登录
      * @param $username 登录名
      * @param $passoword 密码
-     * @return bool 校验改用户信息结果
+     * @return bool 校验当前用户信息结果
      * @throws \think\Exception
      * @throws \think\exception\DbException
      */
@@ -34,7 +34,7 @@ class Manager extends Base
         $time = date('Y-m-d,H-i-s', time());
         $this->edit(['login_times' => $info['login_times'], 'login_ip' => $ip, 'last_login_time' => $time], ['id' => $info['id']]);
         $this->remember_login_info($info);
-        log_write($username, '登录后台管理系统', $ip);
+        log_write('登录后台管理系统');
         return true;
     }
 
@@ -47,23 +47,4 @@ class Manager extends Base
         Session::set('auth_info', $info);
     }
 
-    public function get_data_list($condition)
-    {
-        $where = '';
-        if(isset($condition['username']))
-            $where = 'username like \'%' . $condition['username'] . '%\'';
-        $order = isset($condition['order']) ? $condition['order'] : 'id asc';
-        $page  = isset($_GET['page']) ? $_GET['page'] : 1;
-        $offset = isset($_GET['limit']) ? $_GET['limit'] : 10;
-        $limit = ($page-1) * $offset . ',' .$offset;
-        return $this->where($where)->field('password',true)->order($order)->limit($limit)->select();
-    }
-
-    public function get_data_count($condition)
-    {
-        $where = '';
-        if(isset($condition['username']))
-            $where = 'username like \'%' . $condition['username'] . '%\'';
-        return  $this->where($where)->count();
-    }
 }

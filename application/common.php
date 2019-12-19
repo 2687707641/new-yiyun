@@ -14,10 +14,12 @@
 /***
  * 写入操作日志
  */
-function log_write($runner, $action, $ip)
+function log_write($action)
 {
+    $user = is_login();
+    $ip =  \think\Request::instance()->ip();
     $time = date('Y-m-d H-i-s', time());
-    $res  = \app\admin\model\Logs::insert(['runner' => $runner, 'action' => $action, 'ip_addr' => $ip, 'create_time' => $time]);
+    $res  = \app\admin\model\Logs::insert(['username' => $user['username'], 'action' => $action, 'ip_addr' => $ip, 'create_time' => $time]);
     if (!$res) return false;
 }
 
