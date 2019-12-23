@@ -48,6 +48,8 @@ class Manager extends Base
             $this->error('删除失败!');
         } else {
             //写入操作日志
+            if(is_array($this->_param['name']))
+                $this->_param['name'] = implode(',',$this->_param['name']);
             log_write('删除管理员:'. $this->_param['name'],$manager->getLastSql());
             $this->success('删除成功!', 'lists');
         }

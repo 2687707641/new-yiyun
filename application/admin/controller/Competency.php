@@ -50,7 +50,7 @@ class Competency extends Base
         if($this->request->isPost()){
             $this->check_authority();
             $rules = [
-                ['name','require|length:2,10|chsAlphaNum|unique:auth_competency','规则名称不能为空|规则名称长度应在2~10个字符之间|规则名称只能包含汉字,字母和数字|该规则名称已存在'],
+                ['name','require|length:2,10|unique:auth_competency','规则名称不能为空|规则名称长度应在2~10个字符之间|该规则名称已存在'],
                 ['url','require|length:2,30|unique:auth_competency','方法路由不能为空|方法路由长度应在2~30个字符之间|该方法路由已存在'],
             ];
             $msg = $this->validate($this->_param,$rules);
@@ -90,6 +90,8 @@ class Competency extends Base
         if (!$res) {
             $this->error('删除失败!');
         } else {
+            if(is_array($this->_param['name']))
+                $this->_param['name'] = implode(',',$this->_param['name']);
             //写入操作日志
             log_write('删除权限规则:'. $this->_param['name'],$competency->getLastSql());
             $this->success('删除成功!', 'lists');

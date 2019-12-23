@@ -2,13 +2,13 @@
 <html class="x-admin-sm">
 <head>
     {include file="common/head" /}
+    <style>
+        .layui-table-body {
+            overflow-x: hidden;
+        }
+    </style>
 </head>
 <body>
-<style>
-    .layui-table-body {
-        overflow-x: hidden;
-    }
-</style>
 <div class="x-nav">
           <span class="layui-breadcrumb">
             <a href="">首页</a>
@@ -43,7 +43,7 @@
                     </form>
                 </div>
                 <div class="layui-card-header">
-                    <button class="layui-btn layui-btn-danger" data-type="delete_all">
+                    <button class="layui-btn layui-btn-danger" data-type="del_all">
                         <i class="layui-icon"></i>批量删除
                     </button>
                     <button class="layui-btn" onclick="xadmin.open('添加','{:url('Manager/add')}',600,450)">
@@ -134,7 +134,7 @@
                 case 'edit':
                     var id = obj_data['id'];
                     var url = '/index.php/admin/manager/edit' + '?id=' + id;
-                    xadmin.open('编辑', url, 600, 450);
+                    xadmin.open('编辑', url, 600, 500);
                     break;
                 case 'delete':
                     layer.confirm('确定要删除此管理员吗?', {icon: 3, title: '确认操作'}, function (index) {
@@ -213,27 +213,27 @@
         var active = {
             del_all:function () {
                 //获取复选框数据
-                // var checkStatus = table.checkStatus('idTest')
-                //     ,checkData = checkStatus.data; //得到选中的数据
-                // if(checkData.length === 0){
-                //     return layer.msg('请选择数据');
-                // }
-                // console.log(checkData);
-                // layer.confirm('确定要删除吗?', {icon: 3, title: '确认操作'}, function (index) {
-                //     var ids =[];
-                //     var names =[];
-                //     for(let i in checkData){
-                //         ids.push(checkData[i].id);
-                //         names.push(checkData[i].role_name);
-                //     }
-                //     var url = "{:url('role/del')}";
-                //     var data = {
-                //         id: ids,
-                //         name: names,
-                //     };
-                //     _ajax_send(url, data, 'get');
-                //     layer.close(index); //关闭提示框
-                // });
+                var checkStatus = table.checkStatus('idTest')
+                    ,checkData = checkStatus.data; //得到选中的数据
+                if(checkData.length === 0){
+                    return layer.msg('请选择数据');
+                }
+                console.log(checkData);
+                layer.confirm('确定要删除吗?', {icon: 3, title: '确认操作'}, function (index) {
+                    var ids =[];
+                    var names =[];
+                    for(let i in checkData){
+                        ids.push(checkData[i].id);
+                        names.push(checkData[i].username);
+                    }
+                    var url = "{:url('manager/del')}";
+                    var data = {
+                        id: ids,
+                        name: names,
+                    };
+                    _ajax_send(url, data, 'get');
+                    layer.close(index); //关闭提示框
+                });
             }
         };
 

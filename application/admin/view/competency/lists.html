@@ -2,6 +2,11 @@
 <html class="x-admin-sm">
 <head>
     {include file="common/head" /}
+    <style>
+        .layui-table-body {
+            overflow-x: hidden;
+        }
+    </style>
 </head>
 <body>
 
@@ -40,7 +45,7 @@
                     </form>
                 </div>
                 <div class="layui-card-header">
-                    <button class="layui-btn layui-btn-danger" lay-event="delete_all">
+                    <button class="layui-btn layui-btn-danger" data-type="del_all">
                         <i class="layui-icon"></i>批量删除
                     </button>
                     <button class="layui-btn" onclick="xadmin.open('添加','{:url('Competency/add')}',600,400)">
@@ -79,7 +84,8 @@
             , page: true
             , id: 'idTest'
             , cols: [[
-                {field: 'id', title: 'ID', sort: true,width:150}
+                {checkbox: true}
+                ,{field: 'id', title: 'ID', sort: true,width:150}
                 , {field: 'name', title: '规则名称', sort: true}
                 , {field: 'url', title: '方法路由'}
                 , {field: 'remark', title: '描述'}
@@ -185,6 +191,39 @@
                 document.getElementById("table-search").click();
             }
         })
+
+        //批量删除
+        $('.layui-btn.layui-btn-danger').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        var active = {
+            del_all:function () {
+                //获取复选框数据
+                var checkStatus = table.checkStatus('idTest')
+                    ,checkData = checkStatus.data; //得到选中的数据
+                if(checkData.length === 0){
+                    return layer.msg('请选择数据');
+                }
+                console.log(checkData);
+                layer.confirm('确定要删除吗?', {icon: 3, title: '确认操作'}, function (index) {
+                    var ids =[];
+                    var names =[];
+                    for(let i in checkData){
+                        ids.push(checkData[i].id);
+                        names.push(checkData[i].url);
+                    }
+                    var url = "{:url('competency/del')}";
+                    var data = {
+                        id: ids,
+                        name: names,
+                    };
+                    _ajax_send(url, data, 'get');
+                    layer.close(index); //关闭提示框
+                });
+            }
+        };
     });
 </script>
 </html>

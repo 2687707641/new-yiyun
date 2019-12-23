@@ -20,7 +20,7 @@ class Manager extends Base
     public function login($username, $passoword)
     {
         $info = $this->get(['username' => $username]);
-        if (empty($info) || $info->status == 0) {
+        if (empty($info) || $info->status == 0 || $info->deleted == 1) {
             $this->error = '该用户不存在或被禁用!';
             return false;
         }

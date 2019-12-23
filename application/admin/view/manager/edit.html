@@ -47,19 +47,28 @@
             </div>
             <div class="layui-form-item">
                 <label for="remark" class="layui-form-label">
-                    <span class="x-red">*</span>描述
+                    描述
                 </label>
                 <div class="layui-input-inline">
                     <input type="text" id="remark" name="remark" required="" lay-verify="required"
                            autocomplete="off" class="layui-input" value="{$info['remark']|default=''}">
                 </div>
+            </div>
+            <div class="layui-form-item" {if !isset($info['username'])}style="display:none"{/if}>
+                <label for="used_pwd" class="layui-form-label">
+                    <span class="x-red">*</span>原密码
+                </label>
+                <div class="layui-input-inline">
+                    <input type="password"  name="used_pwd" id="used_pwd"
+                           autocomplete="off" class="layui-input">
+                </div>
                 <div class="layui-form-mid layui-word-aux">
-                    <span class="x-red">*</span>
+                    6到16个字符
                 </div>
             </div>
             <div class="layui-form-item">
                 <label for="L_pass" class="layui-form-label">
-                    <span class="x-red">*</span>密码
+                    <span class="x-red">*</span>{if isset($info['username'])}新{/if}密码
                 </label>
                 <div class="layui-input-inline">
                     <input type="password" id="L_pass" name="password" required="" lay-verify="pass"
