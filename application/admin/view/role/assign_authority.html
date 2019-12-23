@@ -14,7 +14,7 @@
                 </label>
                 <div class="layui-input-inline">
                     <input type="text" id="role_name" name="role_name" required="" lay-verify="required"
-                           autocomplete="off" class="layui-input" value="{$info['role_name']|default=''}">
+                           autocomplete="off" class="layui-input" value="{$info['role_name']|default=''}" readonly="true">
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
@@ -45,7 +45,7 @@
                     描述
                 </label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" id="desc" name="remark" class="layui-textarea">{$info['remark']|default=''}</textarea>
+                    <textarea placeholder="请输入内容" id="desc" name="remark" class="layui-textarea" readonly="true">{$info['remark']|default=''}</textarea>
                 </div>
             </div>
             <div class="layui-form-item">

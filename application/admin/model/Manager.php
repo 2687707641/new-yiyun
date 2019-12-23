@@ -47,4 +47,16 @@ class Manager extends Base
         Session::set('auth_info', $info);
     }
 
+    /***
+     * 关联角色名
+     * @return \think\model\relation\BelongsTo
+     */
+    public function role()
+    {
+        $where = [
+            'deleted' => 0,
+        ];
+        return $this->belongsTo('AuthGroup','role_id','id')->where($where)->bind('role_name');
+    }
+
 }

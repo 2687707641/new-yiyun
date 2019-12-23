@@ -87,7 +87,17 @@
                 ,{field: 'id', title: 'ID', sort: true,width:150}
                 , {field: 'role_name', title: '角色名称', sort: true}
                 , {field: 'remark', title: '描述'}
-                , {field: 'status', title: '成员列表'}
+                , {field: 'username', title: '成员列表',templet:function (d) {
+                        if(d.manager.length == 0){
+                            return '暂无成员'
+                        }else{
+                            var str = '';
+                            for(var i in d.manager){
+                                str += ' '+d.manager[i].username;
+                            }
+                            return str;
+                        }
+                    }}
                 , {
                     field: 'status', title: '状态', width: 100, templet: function (d) {
                         if (d.status)

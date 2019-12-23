@@ -170,6 +170,7 @@ class Base extends Controller
             'where' => $where, //过滤条件
             'order' => $order, //排序
             'limit' => $limit, //分页参数
+            'with'  => '',     //关联
         );
         return $condition;
     }

@@ -21,8 +21,8 @@ class Role extends Base
     public function get_role_list()
     {
         $auth_group = new AuthGroupModel();
-        //排除被删除的
         $this->_condition['where']['deleted'] = 0;
+        $this->_condition['with'] = 'manager';
         $data  = $auth_group->get_data_list($this->_condition);
         $count = $auth_group->get_data_count($this->_condition['where']);
         response_json('', $data, $count);
@@ -174,5 +174,4 @@ class Role extends Base
         $this->assign('lists',$lists);
         return $this->fetch();
     }
-    
 }

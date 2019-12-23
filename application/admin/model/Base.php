@@ -67,7 +67,12 @@ class Base extends Model
      */
     public function get_data_list($conditon)
     {
-        return $this->where($conditon['where'])->field('password', true)->order($conditon['order'])->limit($conditon['limit'])->select();
+        return $this->with($conditon['with'])
+                ->where($conditon['where'])
+                ->field('password', true)
+                ->order($conditon['order'])
+                ->limit($conditon['limit'])
+                ->select();
     }
 
     /***
@@ -80,4 +85,5 @@ class Base extends Model
     {
         return $this->where($where)->count();
     }
+
 }

@@ -87,7 +87,13 @@
                 , {field: 'username', title: '登录名', sort: true, width: 120}
                 , {field: 'nickname', title: '昵称', width: 120}
                 , {field: 'remark', title: '描述'}
-                , {field: 'role_id', title: '所属角色', width: 150}
+                , {field: 'role_name', title: '所属角色', width: 150, templet:function (d) {
+                        if(d.role_id == 0)
+                            return '超级管理员';
+                        if(d.role_name == null)
+                            return '该角色已被删除';
+                        return d.role_name;
+                    }}
                 , {field: 'login_ip', title: '登录IP', width: 140}
                 , {field: 'last_login_time', title: '上次登录时间', sort: true}
                 , {field: 'login_times', title: '登录次数', width: 100}
