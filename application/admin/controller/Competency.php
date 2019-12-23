@@ -46,6 +46,7 @@ class Competency extends Base
      */
     public function _edit($id = '')
     {
+        $competency = new CompetencyModel();
         if($this->request->isPost()){
             $rules = [
                 ['name','require|length:2,10|chsAlphaNum|unique:auth_competency','规则名称不能为空|规则名称长度应在2~10个字符之间|规则名称只能包含汉字,字母和数字|该规则名称已存在'],
@@ -53,7 +54,6 @@ class Competency extends Base
             ];
             $msg = $this->validate($this->_param,$rules);
             if($msg !== true) $this->error($msg, '');
-            $competency = new CompetencyModel();
             if($id){
                 $res = $competency->edit($this->_param,['id'=>$id]);
             }else{
@@ -61,14 +61,13 @@ class Competency extends Base
             }
             if($res !== false){
                 $str = empty($id) ? '创建权限规则: ' : '编辑权限规则' ;
-                log_write( $str . $this->_param['url']);
+                log_write( $str . $this->_param['url'],$competency->getLastSql());
                 $this->success(empty($id) ? '创建权限规则成功!' : '编辑权限规则成功', url('lists'));
             }else{
                 $this->error($competency->getError(), '');
             }
         }
         if($id){
-            $competency = new CompetencyModel();
             $info = $competency->where('id',$id)->find();
             $this->assign('info',$info);
         }
@@ -91,7 +90,7 @@ class Competency extends Base
             $this->error('删除失败!');
         } else {
             //写入操作日志
-            log_write('删除权限规则:'. $this->_param['name']);
+            log_write('删除权限规则:'. $this->_param['name'],$competency->getLastSql());
             $this->success('删除成功!', 'lists');
         }
 
@@ -110,7 +109,7 @@ class Competency extends Base
             $this->error($this->_param['status'] == 0 ? '禁用失败' : '启用失败');
         } else {
             $str = $this->_param['status'] == 0 ? '禁用' : '启用';
-            log_write($str .'权限规则:'. $this->_param['name']);
+            log_write($str .'权限规则:'. $this->_param['name'],$competency->getLastSql());
             $this->success($this->_param['status'] == 0 ? '禁用成功' : '启用成功', 'lists');
         }
     }

@@ -37,7 +37,7 @@ class Base extends Controller
         $this->_param = $this->request->param();
         $this->_map   = $this->request->get();
         $this->_condition = $this->get_condition();
-        Log::info('Condition信息' . print_r($this->_condition, true));
+        Log::info('Param参数' . print_r($this->_param, true));
         //将公用数据分配至所有页面
         $this->assign('user', $this->_user); //当前登录用户
         $this->assign('_self_', $this->request->url()); //当前页面对应控制器
@@ -59,6 +59,9 @@ class Base extends Controller
         } else {
             //查询权限列表
             $rules = $group->where('id', $auth_info['role_id'])->column('rules');
+            if(empty($rules)){
+                $this->redirect('Admin/login');
+            }
             $arr   = explode(',', $rules[0]);
             $menu  = $rule->where('id', 'in', $arr)->select();
         }
@@ -68,7 +71,7 @@ class Base extends Controller
         $this->assign('menu', $menu);
     }
 
-    //读取菜单列表
+    //读取权限列表
     public function get_rule()
     {
         //获取当前用户(管理员)信息
@@ -102,8 +105,13 @@ class Base extends Controller
         }
         //查询规则信息
         $competency      = new AuthComModel();
-        $competency_info = $competency->where('url', $url)->find();
-        if (empty($competency_info)) return false;
+        $where = [
+            'url' => $url,
+            'status' => 1,
+            'deleted' => 0,
+        ];
+        $competency_info = $competency->where($where)->find();
+        if (empty($competency_info)) $this->error('权限不足,操作失败');
         //查询当前角色信息
         $role      = new AuthGroupModel();
         $role_info = $role->where('id', $auth_info['role_id'])->find();
@@ -113,7 +121,7 @@ class Base extends Controller
             if ($v == $competency_info->id)
                 return true;
         }
-        return false;
+        $this->error('权限不足,操作失败');
     }
 
     /***
@@ -151,6 +159,7 @@ class Base extends Controller
                     $where['role_name'] = ['like','%' . $v . '%'];
                     break;
                 case 'name':
+                    if(is_array($v)) break;
                     $where['name'] = ['like','%' . $v . '%'];
                     break;
             }

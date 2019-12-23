@@ -14,12 +14,12 @@
 /***
  * 写入操作日志
  */
-function log_write($action)
+function log_write($action,$details='')
 {
     $user = is_login();
     $ip =  \think\Request::instance()->ip();
     $time = date('Y-m-d H-i-s', time());
-    $res  = \app\admin\model\Logs::insert(['username' => $user['username'], 'action' => $action, 'ip_addr' => $ip, 'create_time' => $time]);
+    $res  = \app\admin\model\Logs::insert(['username' => $user['username'], 'action' => $action, 'ip_addr' => $ip, 'create_time' => $time,'details'=>$details]);
     if (!$res) return false;
 }
 
@@ -53,6 +53,5 @@ function response_json($msg = '', $data = [], $count = 0, $code = 0)
     );
     echo json_encode($result);
 }
-
 
 

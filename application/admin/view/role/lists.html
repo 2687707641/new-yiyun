@@ -4,7 +4,11 @@
     {include file="common/head" /}
 </head>
 <body>
-
+<style>
+    .layui-table-body {
+        overflow-x: hidden;
+    }
+</style>
 <div class="x-nav">
           <span class="layui-breadcrumb">
             <a href="">首页</a>
@@ -39,10 +43,11 @@
                     </form>
                 </div>
                 <div class="layui-card-header">
-                    <button class="layui-btn layui-btn-danger" lay-event="delete_all">
+                    <button class="layui-btn layui-btn-danger" data-type="del_all">
                         <i class="layui-icon"></i>批量删除
                     </button>
-                    <button class="layui-btn" onclick="xadmin.open('添加','{:url('Manager/add')}',600,400)">
+
+                    <button class="layui-btn" onclick="xadmin.open('添加','{:url('role/add')}',700,650)">
                         <i class="layui-icon"></i>添加
                     </button>
                 </div>
@@ -78,7 +83,8 @@
             , page: true
             , id: 'idTest'
             , cols: [[
-                {field: 'id', title: 'ID', sort: true,width:150}
+                {checkbox: true}
+                ,{field: 'id', title: 'ID', sort: true,width:150}
                 , {field: 'role_name', title: '角色名称', sort: true}
                 , {field: 'remark', title: '描述'}
                 , {field: 'status', title: '成员列表'}
@@ -97,7 +103,7 @@
                         if (d.status)
                             str = '<a href="javascript:;" title="禁用" lay-event="status"><i class="layui-icon">&#xe601;</i></a>';
                         return str +
-                            '<a href="javascript:;" title="分配权限" lay-event="permission"><i class="layui-icon">&#xe641;</i></a>'+
+                            '<a href="javascript:;" title="分配权限" lay-event="authority"><i class="layui-icon">&#xe641;</i></a>'+
                             '<a href="javascript:;" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>' +
                             '<a href="javascript:;" title="删除" lay-event="delete"><i class="layui-icon">&#xe640;</i></a>';
                     }
@@ -122,9 +128,8 @@
             console.log(obj_data);
             switch (obj.event) {
                 case 'edit':
-                    var id = obj_data['id'];
-                    var url = '/index.php/admin/role/edit' + '?id=' + id;
-                    xadmin.open('编辑', url, 600, 400);
+                    var url = '/index.php/admin/role/edit' + '?id=' + obj_data['id'];
+                    xadmin.open('编辑', url, 700, 650);
                     break;
                 case 'delete':
                     layer.confirm('确定要删除角色吗?', {icon: 3, title: '确认操作'}, function (index) {
@@ -149,7 +154,10 @@
                         layer.close(index); //关闭提示框
                     });
                     break;
-                case 'permission':
+                case 'authority':
+                    var url = '/index.php/admin/role/assign_authority' + '?id=' + obj_data['id'];
+                    xadmin.open('分配权限', url, 700, 650);
+                    break;
                     break;
             }
             ;
@@ -187,6 +195,40 @@
                 document.getElementById("table-search").click();
             }
         })
+
+        //批量删除
+        $('.layui-btn.layui-btn-danger').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        var active = {
+            del_all:function () {
+                //获取复选框数据
+                var checkStatus = table.checkStatus('idTest')
+                    ,checkData = checkStatus.data; //得到选中的数据
+                if(checkData.length === 0){
+                    return layer.msg('请选择数据');
+                }
+                console.log(checkData);
+                layer.confirm('确定要删除吗?', {icon: 3, title: '确认操作'}, function (index) {
+                    var ids =[];
+                    var names =[];
+                    for(let i in checkData){
+                        ids.push(checkData[i].id);
+                        names.push(checkData[i].role_name);
+                    }
+                    var url = "{:url('role/del')}";
+                    var data = {
+                        id: ids,
+                        name: names,
+                    };
+                    _ajax_send(url, data, 'get');
+                    layer.close(index); //关闭提示框
+                });
+            }
+        };
+
     });
 </script>
 </html>

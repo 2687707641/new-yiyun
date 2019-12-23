@@ -14,7 +14,7 @@
                 </label>
                 <div class="layui-input-inline">
                     <input type="text" id="username" name="username" required="" lay-verify="required"
-                           autocomplete="off" class="layui-input">
+                           autocomplete="off" class="layui-input" value="{$info['username']|default=''}">
                 </div>
                 <div class="layui-form-mid layui-word-aux">
                     <span class="x-red">*</span>将会成为您唯一的登入名
@@ -26,7 +26,7 @@
                 </label>
                 <div class="layui-input-inline">
                     <input type="text" id="nickname" name="nickname" required="" lay-verify="required"
-                           autocomplete="off" class="layui-input">
+                           autocomplete="off" class="layui-input" value="{$info['nickname']|default=''}">
                 </div>
                 <div class="layui-form-mid layui-word-aux">
                     <span class="x-red">*</span>
@@ -40,9 +40,21 @@
                     <select id="shipping" name="role_id" class="valid" lay-verify="required">
 <!--                        <option>-请选择角色-</option>-->
                         {volist name="role_list" id="role"}
-                            <option value="{$role['id']}">{$role['role_name']}</option>
+                            <option value="{$role['id']}" {if isset($info['role_id'])&&$info['role_id'] == $role['id']}selected{/if}>{$role['role_name']}</option>
                         {/volist}
                     </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="remark" class="layui-form-label">
+                    <span class="x-red">*</span>描述
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="remark" name="remark" required="" lay-verify="required"
+                           autocomplete="off" class="layui-input" value="{$info['remark']|default=''}">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <span class="x-red">*</span>
                 </div>
             </div>
             <div class="layui-form-item">

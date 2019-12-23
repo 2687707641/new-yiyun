@@ -14,7 +14,7 @@ class Base extends Model
 {
 
     //定义公共参数
-    protected $_deleted = false; //是否从数据库中删除
+    protected $_deleted = true; //是否从数据库中删除(不删除的情况下)
 
     /***
      * 单个添加
@@ -46,7 +46,7 @@ class Base extends Model
     public function del($condition)
     {
         if($this->_deleted)
-            return $this->destory($condition);
+            return $this->where($condition)->delete();
         return $this->isUpdate(true)->allowField(true)->save(['deleted'=>1],$condition);
     }
 

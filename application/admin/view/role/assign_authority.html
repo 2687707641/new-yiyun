@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+    {include file="common/head" /}
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row">
+        <form action="{$_self_}" class="layui-form layui-form-pane ajax_post">
+            <div class="layui-form-item">
+                <label for="role_name" class="layui-form-label">
+                    <span class="x-red">*</span>角色名
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="role_name" name="role_name" required="" lay-verify="required"
+                           autocomplete="off" class="layui-input" value="{$info['role_name']|default=''}">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">
+                    <span class="x-red">*</span>拥有菜单
+                </label>
+                <table  class="layui-table layui-input-block">
+                    <tbody>
+                    {volist name='lists' id='vo'}
+                    <tr>
+                        <td>
+                            <input name="competency[]" lay-skin="primary" type="checkbox" value="{$vo.id}" title="{$vo.name}" lay-filter="father" {if isset($info['competency'])&&in_array($vo['id'],$info['competency'])}checked{/if}>
+                        </td>
+                        <td>
+                            <div class="layui-input-block">
+                                方法路由:{$vo.url}
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                描述:{$vo.remark|default='暂无描述'}
+                            </div>
+                        </td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label for="desc" class="layui-form-label">
+                    描述
+                </label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" id="desc" name="remark" class="layui-textarea">{$info['remark']|default=''}</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <button class="layui-btn" lay-submit="" lay-filter="add">提交</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="__STATIC__/js/jquery-2.1.4.min.js"></script>
+<script src="__STATIC__/js/common.js"></script>
+<script>
+    layui.use(['form','layer'], function(){
+        $ = layui.jquery;
+        var form = layui.form
+            ,layer = layui.layer;
+
+        //自定义验证规则
+        // form.verify({
+        //     rolename: function(value){
+        //         if(value.length < 3){
+        //             return '角色名至少得3个字符';
+        //         }
+        //     },
+        // });
+
+
+
+        //监听提交(检测是否勾选复选框)
+        // form.on('submit(add)', function(data){
+        //     console.log(data.form);
+        //     console.log(data);
+        //     return false;
+        // });
+
+        //监听全选框
+        form.on('checkbox(father)', function(data){
+            if(data.elem.checked){
+                $(data.elem).parent().siblings('td').find('input').prop("checked", true);
+                form.render();
+            }else{
+                $(data.elem).parent().siblings('td').find('input').prop("checked", false);
+                form.render();
+            }
+        });
+
+        //监听单选框
+        form.on('checkbox(son)',function (data) {
+            if(data.elem.checked){
+                $(data.elem).parent().parent().siblings('td').find('input').prop("checked", true);
+                form.render();
+            }
+        })
+
+
+    });
+</script>
+</body>
+
+</html>
