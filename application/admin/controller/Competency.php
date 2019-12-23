@@ -48,6 +48,7 @@ class Competency extends Base
     {
         $competency = new CompetencyModel();
         if($this->request->isPost()){
+            $this->check_authority();
             $rules = [
                 ['name','require|length:2,10|chsAlphaNum|unique:auth_competency','规则名称不能为空|规则名称长度应在2~10个字符之间|规则名称只能包含汉字,字母和数字|该规则名称已存在'],
                 ['url','require|length:2,30|unique:auth_competency','方法路由不能为空|方法路由长度应在2~30个字符之间|该方法路由已存在'],
@@ -81,8 +82,8 @@ class Competency extends Base
     public function del()
     {
         //判断权限
-        //...
-        if (empty($this->_param['id']))
+        $this->check_authority();
+        if (!isset($this->_param['id']) || !isset($this->_param['name']))
             $this->error('参数错误');
         $competency = new CompetencyModel();
         $res     = $competency->del(['id' => ['in', $this->_param['id']]]);
@@ -101,6 +102,7 @@ class Competency extends Base
      */
     public function change_status()
     {
+        $this->check_authority();
         if (!isset($this->_param['id']) || !isset($this->_param['status']))
             $this->error('参数错误');
         $competency = new CompetencyModel();

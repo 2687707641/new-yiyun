@@ -40,7 +40,7 @@ class Manager extends Base
     public function del()
     {
         $this->check_authority();
-        if (empty($this->_param['id']))
+        if (!isset($this->_param['id']) || !isset($this->_param['name']))
             $this->error('参数错误');
         $manager = new ManagerModel();
         $res     = $manager->del(['id' => ['in', $this->_param['id']]]);
