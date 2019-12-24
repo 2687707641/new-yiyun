@@ -43,9 +43,6 @@
                     </form>
                 </div>
                 <div class="layui-card-header">
-                    <button class="layui-btn layui-btn-danger" data-type="del_all">
-                        <i class="layui-icon"></i>批量删除
-                    </button>
                     <button class="layui-btn" onclick="xadmin.open('添加','{:url('Manager/add')}',600,450)">
                         <i class="layui-icon"></i>添加
                     </button>
@@ -82,8 +79,7 @@
             , page: true
             , id: 'idTest'
             , cols: [[
-                {checkbox: true}
-                , {field: 'id', title: 'ID', sort: true, width: 100}
+                {field: 'id', title: 'ID', sort: true, width: 100}
                 , {field: 'username', title: '登录名', sort: true, width: 120}
                 , {field: 'nickname', title: '昵称', width: 120}
                 , {field: 'remark', title: '描述'}
@@ -201,48 +197,6 @@
                 document.getElementById("table-search").click();
             }
         })
-
-        //监听复选框事件
-        table.on('checkbox(test)', function(obj){
-            console.log(obj.checked); //当前是否选中状态
-            console.log(obj.data); //选中行的相关数据
-            console.log(obj.type); //如果触发的是全选，则为：all，如果触发的是单选，则为：one
-        });
-
-
-        //批量删除
-        $('.layui-btn.layui-btn-danger').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
-        });
-
-        var active = {
-            del_all:function () {
-                //获取复选框数据
-                var checkStatus = table.checkStatus('idTest')
-                    ,checkData = checkStatus.data; //得到选中的数据
-                if(checkData.length === 0){
-                    return layer.msg('请选择数据');
-                }
-                console.log(checkData);
-                layer.confirm('确定要删除吗?', {icon: 3, title: '确认操作'}, function (index) {
-                    var ids =[];
-                    var names =[];
-                    for(let i in checkData){
-                        ids.push(checkData[i].id);
-                        names.push(checkData[i].username);
-                    }
-                    var url = "{:url('manager/del')}";
-                    var data = {
-                        id: ids,
-                        name: names,
-                    };
-                    _ajax_send(url, data, 'get');
-                    layer.close(index); //关闭提示框
-                });
-            }
-        };
-
     });
 
 </script>

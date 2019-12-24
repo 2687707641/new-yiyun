@@ -71,23 +71,6 @@ class Base extends Controller
         $this->assign('menu', $menu);
     }
 
-    //读取权限列表
-    public function get_rule()
-    {
-        //获取当前用户(管理员)信息
-        $auth_info = Session::get('auth_info', 'think');
-        if (empty($auth_info)) {
-            //重定向至登录界面
-            $this->redirect('Admin/login');
-        }
-        if ($auth_info['id'] == 1 && $auth_info['username'] == 'admin') {
-            return true;
-        } else {
-            //检查菜单列表
-
-        }
-    }
-
     /***
      * @return bool 权限检查结果
      */

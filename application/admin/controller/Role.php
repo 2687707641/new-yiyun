@@ -150,7 +150,7 @@ class Role extends Base
             if (!empty($this->_param['competency'])) {
                 $this->_param['competency'] = ',' . implode(',', $this->_param['competency']) . ',';
             }
-            $res = $auth_group->edit($this->_param,['id'=>$this->_param['id']]);
+            $res = $auth_group->edit(['competency'=>$this->_param['competency']],['id'=>$this->_param['id']]);
             if($res !== false){
                 log_write('更改角色权限:' . $this->_param['role_name'] ,$auth_group->getLastSql());
                 $this->success('分配权限成功','lists');
