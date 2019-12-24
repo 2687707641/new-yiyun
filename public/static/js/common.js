@@ -169,7 +169,9 @@
 
 $(function () {
 
-    //表单提交
+    /***
+     * 表单提交
+     */
     $('.ajax_post').each(function (index,form) {
         try{
             $(form).submit(function (from) {
@@ -183,13 +185,39 @@ $(function () {
         }
     })
 
+
+    /***
+     * get提交
+     */
+    $('.ajax_get').click(function (e) {
+        e.preventDefault(); //禁止跳转页面
+        var url = $(this).attr('url') || $(this).attr('href'); //拿到url
+        if ($(this).hasClass('confirm')) {
+            _confirmInit('get', this, '', url)
+        } else {
+            _ajax_send(url, '', 'get');
+        }
+    })
+
+     /***
+     *onfrim提示初始化
+     */
+    function _confirmInit(method,that,query,url) {
+        var msg = $(that).attr("msg");
+        layer.confirm(msg, {icon: 3, title: '确认操作'},function (index) {
+            _ajax_send(url, query, method,false,true);
+        });
+    }
+
+
+
 })
 
 /**
  * AJAX 通用方法
  * @private
  */
-function _ajax_send(url,data,method,iframeReload = false) {
+function _ajax_send(url,data,method,iframeReload = false,refalse = false) {
     //加载时动画
     var loading = layer.load(1,{shade: [0.3, '#666666']});
     
@@ -208,6 +236,9 @@ function _ajax_send(url,data,method,iframeReload = false) {
             //请求成功处理 result->返回数据, status->success
             var table = layui.table;
             if(result.code == 1) { //tp使用success方法
+                if(refalse){
+                    _jump(result);
+                }
                 layer.msg(result.msg, {icon: 1, time: 500}, function () {
                     if(iframeReload){
                         tableReload();
@@ -238,7 +269,7 @@ window._jump = function (data) {
     var index =parent.layer.getFrameIndex(window.name);
 
     if(data.code == 1){ //tp使用success方法
-        layer.msg(data.msg,{icon:1,shade: [0.3, '#666666'], time: 500},function () {
+        layer.msg(data.msg,{icon:1,shade: [0.3, '#666666'], time: 1000},function () {
             //控制是否是顶级刷新，默认是
             if (typeof (data.isTop) && data.isTop == undefined) {
                 data.isTop = 1;
@@ -280,6 +311,5 @@ function tableReload() {
     parent.layer.close(index);
     //关闭父级页面的表格
     parent.layui.table.reload('idTest');
-
 }
 

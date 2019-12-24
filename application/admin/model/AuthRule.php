@@ -18,7 +18,11 @@ class AuthRule extends Base
      */
     public function cate_tree()
     {
-        $data = $this->order('id')->select();
+        $where = [
+            'deleted' => 0,
+            'status' => 1,
+        ];
+        $data = $this->order('sort asc,id asc')->where($where)->select();
         return  $this->tree($data);
     }
 
@@ -30,7 +34,7 @@ class AuthRule extends Base
              if($v['pid'] == $pid){
                  //如果是顶级栏目就将其放进数组里
                  $v['level'] = $level;
-                 $arr[] = $v;
+                 $arr[$k] = $v;
                  $this->tree($data,$v['id'],$level+1);//找到顶级栏目后找其他栏目
              }
          }
