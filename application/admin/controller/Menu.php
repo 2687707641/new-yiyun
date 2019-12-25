@@ -31,8 +31,7 @@ class Menu extends Base
             }
             $arr   = explode(',', $rules[0]);
             $where['id'] = ['in',$arr];
-            $tree_data = $rule->where($where)->select();
-            $lists = $rule->tree($tree_data);
+            $lists = $rule->cate_tree($where);
         }
         $this->assign('lists',$lists);
         return $this->fetch();
