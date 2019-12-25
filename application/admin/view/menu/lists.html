@@ -22,7 +22,7 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">
-                    <button onclick="xadmin.open('添加栏目','{:url('add')}')" class="layui-btn" lay-filter="sreach"><i class="layui-icon"></i>增加栏目</button>
+                    <button onclick="xadmin.open('添加栏目','{:url('menu/add')}',500,500)" class="layui-btn" lay-filter="sreach"><i class="layui-icon"></i>增加栏目</button>
                 </div>
                 <div class="layui-card-body ">
                     <table class="layui-table layui-form">
@@ -60,12 +60,12 @@
                             <td>{$vo.sort}</td>
                             <td class="td-manage">
                                 {if $vo['status']==1}
-                                <a href="{:url('menu/change_status',['id'=>$vo['id'],'status'=>0,'name'=>$vo['name']])}" title="禁用" msg="确定要禁用次菜单吗?" class="ajax_get confirm"><i class="layui-icon">&#xe601;</i></a>
+                                <a href="{:url('menu/change_status',['id'=>$vo['id'],'status'=>0,'name'=>$vo['name']])}" title="禁用" msg="确定要禁用此菜单吗?" class="ajax_get confirm"><i class="layui-icon">&#xe601;</i></a>
                                 {else/}
                                 <a href="{:url('menu/change_status',['id'=>$vo['id'],'status'=>1,'name'=>$vo['name']])}" title="启用" msg="确定要启用此菜单吗?" class="ajax_get confirm"><i class="layui-icon">&#xe62f;</i></a>
                                 {/if}
-                                <a href="javascript:;" title="编辑" onclick="xadmin.open('编辑','{:url('menu/edit',['id'=>$vo['id']])}')"><i class="layui-icon">&#xe642;</i></a>
-                                <a href="{:url('del',['id'=>$vo['id']])}" title="删除" msg="确定要删除吗?" class="ajax_get confirm"><i class="layui-icon">&#xe640;</i></a>
+                                <a href="javascript:;" title="编辑" onclick="xadmin.open('编辑','{:url('menu/edit',['id'=>$vo['id']])}',500,500)"><i class="layui-icon">&#xe642;</i></a>
+                                <a href="{:url('del',['id'=>$vo['id'],'name'=>$vo['name']])}" title="删除" msg="确定要删除吗?" class="ajax_get confirm"><i class="layui-icon">&#xe640;</i></a>
                             </td>
                         </tr>
                         {/volist}

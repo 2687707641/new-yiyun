@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+    {include file='common/head'}
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row">
+        <form class="layui-form ajax_post_reload" action="{$_self_}">
+            <div class="layui-form-item">
+                <label for="name" class="layui-form-label">
+                    <span class="x-red">*</span>栏目名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" required="" lay-verify="required" autocomplete="off" class="layui-input" value="{$info['name']|default=''}" placeholder="必填项"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="url" class="layui-form-label">
+                    栏目标识</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="url" name="url" autocomplete="off" class="layui-input" value="{$info['url']|default=''}" placeholder="顶级栏目可不填,默认为`#`"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    <span class="x-red">*</span>所属栏目</label>
+                <div class="layui-input-inline">
+                    <select id="shipping" name="pid" class="valid">
+                        <option value="0">顶级栏目</option>
+                        {volist name="lists" id="vo"}
+                        <option value="{$vo['id']}">{$vo['name']}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="icon" class="layui-form-label">
+                    图标
+                    {if isset($info['icon'])}<i class="iconfont nav_right">{$info['icon']}</i>{/if}
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="icon" name="icon" autocomplete="off" class="layui-input" value="{$info['icon']|default=''}" placeholder="不填则使用默认图标">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label for="remark" class="layui-form-label">描述</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" id="remark" name="remark" class="layui-textarea">{$info['remark']|default=''}</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="L_repass" class="layui-form-label"></label>
+                <button class="layui-btn" lay-filter="add" lay-submit="">提交</button></div>
+        </form>
+    </div>
+</div>
+<script src="__STATIC__/js/jquery-2.1.4.min.js"></script>
+<script src="__STATIC__/js/common.js"></script>
+<script>layui.use(['form', 'layer'],
+    function() {
+        $ = layui.jquery;
+        var form = layui.form,
+            layer = layui.layer;
+    });
+</script>
+</body>
+
+</html>

@@ -170,7 +170,7 @@
 $(function () {
 
     /***
-     * 表单提交
+     * 表单提交(刷新上层table)
      */
     $('.ajax_post').each(function (index,form) {
         try{
@@ -185,6 +185,21 @@ $(function () {
         }
     })
 
+    /***
+     * 表单提交(刷新页面)
+     */
+    $('.ajax_post_reload').each(function (index,form) {
+        try{
+            $(form).submit(function (from) {
+                var data = $(form).serialize(), url = $(form).attr('action');
+                _ajax_send(url, data, 'post',false,true);
+                return false;
+            })
+        }catch (e) {
+            alert(e);
+            console.info('表单加载失败');
+        }
+    })
 
     /***
      * get提交
@@ -238,8 +253,9 @@ function _ajax_send(url,data,method,iframeReload = false,refalse = false) {
             if(result.code == 1) { //tp使用success方法
                 if(refalse){
                     _jump(result);
+                    return;
                 }
-                layer.msg(result.msg, {icon: 1, time: 500}, function () {
+                layer.msg(result.msg, {icon: 1, time: 1000}, function () {
                     if(iframeReload){
                         tableReload();
                     }else{

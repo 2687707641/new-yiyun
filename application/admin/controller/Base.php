@@ -53,9 +53,13 @@ class Base extends Controller
         }
         $group = new AuthGroupModel();
         $rule  = new AuthRuleModel();
+        $where = [
+            'deleted' => 0,
+            'status' => 1,
+        ];
         if ($auth_info['id'] == 1 && $auth_info['username'] == 'admin') {
             //获取所有权限
-            $menu = $rule->cate_tree();
+            $menu = $rule->cate_tree($where);
         } else {
             //查询权限列表
             $rules = $group->where('id', $auth_info['role_id'])->column('rules');
@@ -63,11 +67,13 @@ class Base extends Controller
                 $this->redirect('Admin/login');
             }
             $arr   = explode(',', $rules[0]);
-            $menu  = $rule->where('id', 'in', $arr)->select();
+            $where['id'] = ['in',$arr];
+            $tree_data = $rule->where($where)->select();
+            $menu = $rule->tree($tree_data);
         }
-        if (empty($menu)) {
-            $this->redirect('Admin/login');
-        }
+//        if (empty($menu)) {
+//            $this->redirect('Admin/login');
+//        }
         $this->assign('menu', $menu);
     }
 
