@@ -109,7 +109,7 @@
                             return '超级管理员不允许操作';
                         }
                         var str = '<a href="javascript:;" title="启用" lay-event="status"><i class="layui-icon">&#xe62f;</i></a>';
-                        if (d.status)
+                        if (d.status == 1)
                             str = '<a href="javascript:;" title="禁用" lay-event="status"><i class="layui-icon">&#xe601;</i></a>';
                         return str +
                             '<a href="javascript:;" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>' +
