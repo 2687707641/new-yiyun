@@ -75,6 +75,9 @@
                 , {field: 'action', title: '执行动作'}
                 , {field: 'ip_addr', title: '登录IP'}
                 , {field: 'create_time', title: '创建时间', sort: true}
+                , {field: 'right', title: '操作', templet:function (d) {
+                        return '<a href="javascript:;" title="详情" lay-event="details"><i class="layui-icon">&#xe60e;</i></a>';
+                    }}
             ]]
             , initSort: {
                 //默认排序
@@ -102,6 +105,18 @@
                 }
             });
         })
+
+        //监听工具栏事件
+        table.on('tool(test)', function (obj) {
+            var obj_data = obj.data;
+            console.log(obj_data);
+            switch (obj.event) {
+                case 'details':
+                    layer.alert('SQL语句: ' + obj_data['details']);
+                    break;
+            }
+            ;
+        });
 
         //监听搜索
         form.on('submit(table-search)', function (data) {

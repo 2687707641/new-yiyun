@@ -34,7 +34,7 @@ class Manager extends Base
         $time = date('Y-m-d,H-i-s', time());
         $this->edit(['login_times' => $info['login_times'], 'login_ip' => $ip, 'last_login_time' => $time], ['id' => $info['id']]);
         $this->remember_login_info($info);
-        log_write('登录后台管理系统');
+        log_write('登录后台管理系统',$this->getLastSql());
         return true;
     }
 
