@@ -100,7 +100,7 @@
                     }}
                 , {
                     field: 'status', title: '状态', width: 100, templet: function (d) {
-                        if (d.status)
+                        if (d.status == 1)
                             return ' <span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span>';
                         return '<span class="layui-btn layui-btn-normal layui-btn-mini layui-btn-disabled">已禁用</span>';
                     }
@@ -110,7 +110,7 @@
                 , {
                     field: 'right', title: '操作', templet: function (d) {
                         var str = '<a href="javascript:;" title="启用" lay-event="status"><i class="layui-icon">&#xe62f;</i></a>';
-                        if (d.status)
+                        if (d.status == 1)
                             str = '<a href="javascript:;" title="禁用" lay-event="status"><i class="layui-icon">&#xe601;</i></a>';
                         return str +
                             '<a href="javascript:;" title="分配权限" lay-event="authority"><i class="layui-icon">&#xe641;</i></a>'+
