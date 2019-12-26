@@ -37,7 +37,7 @@
                     <span class="x-red">*</span>角色
                 </label>
                 <div class="layui-input-inline">
-                    <select id="shipping" name="role_id" class="valid" lay-verify="required">
+                    <select id="shipping" name="role_id" class="valid" lay-verify="select">
 <!--                        <option>-请选择角色-</option>-->
                         {volist name="role_list" id="role"}
                             <option value="{$role['id']}" {if isset($info['role_id'])&&$info['role_id'] == $role['id']}selected{/if}>{$role['role_name']}</option>
@@ -117,6 +117,10 @@
                 if ($('#L_pass').val() != $('#L_repass').val()) {
                     return '两次密码不一致';
                 }
+            },
+            select: function (value) {
+              if(value == null)
+                  return '请选择角色'
             }
         });
     });

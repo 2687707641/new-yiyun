@@ -37,7 +37,6 @@ class Base extends Controller
         $this->_param = $this->request->param();
         $this->_map   = $this->request->get();
         $this->_condition = $this->get_condition();
-        Log::info('Param参数' . print_r($this->_param, true));
         //将公用数据分配至所有页面
         $this->assign('user', $this->_user); //当前登录用户
         $this->assign('_self_', $this->request->url()); //当前页面对应控制器
@@ -71,9 +70,9 @@ class Base extends Controller
             $tree_data = $rule->where($where)->select();
             $menu = $rule->tree($tree_data);
         }
-//        if (empty($menu)) {
-//            $this->redirect('Admin/login');
-//        }
+        if (empty($menu)) {
+            $this->redirect('Admin/login');
+        }
         $this->assign('menu', $menu);
     }
 
