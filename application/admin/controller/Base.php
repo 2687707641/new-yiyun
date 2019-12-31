@@ -25,7 +25,7 @@ class Base extends Controller
     protected $_row = 10; //分页初始条数
     //筛选条件(LayUI表格用)
     protected $_condition = [];
-
+    
     //初始化加载
     public function _initialize()
     {
@@ -67,8 +67,7 @@ class Base extends Controller
             }
             $arr   = explode(',', $rules[0]);
             $where['id'] = ['in',$arr];
-            $tree_data = $rule->where($where)->select();
-            $menu = $rule->tree($tree_data);
+            $menu = $rule->cate_tree($where);
         }
         if (empty($menu)) {
             $this->redirect('Admin/login');
