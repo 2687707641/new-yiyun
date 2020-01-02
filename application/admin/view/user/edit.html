@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+    {include file='common/head' /}
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row">
+        <form class="layui-form ajax_post" action="{$_self_}">
+            <div class="layui-form-item">
+                <label for="nickname" class="layui-form-label">
+                    <span class="x-red">*</span>用户昵称
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="nickname" name="nickname" required="" lay-verify="required"
+                           autocomplete="off" class="layui-input" value="{$info['nickname']|default=''}">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <span class="x-red">*</span>必填
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="phone" class="layui-form-label">
+                    <span class="x-red">*</span>绑定手机号
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="phone" name="phone" required="" lay-verify="required"
+                           autocomplete="off" class="layui-input" value="{$info['phone']|default=''}">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <span class="x-red">*</span>必填
+                </div>
+            </div>
+            <div class="layui-form-item" {if !isset($info['id'])}style="display:none"{/if}>
+                <label for="used_pwd" class="layui-form-label">
+                    <span class="x-red">*</span>原密码
+                </label>
+                <div class="layui-input-inline">
+                    <input type="password"  name="used_pwd" id="used_pwd"
+                           autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    6到16个字符
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="L_pass" class="layui-form-label">
+                    <span class="x-red">*</span>{if isset($info['id'])}新{/if}密码
+                </label>
+                <div class="layui-input-inline">
+                    <input type="password" id="L_pass" name="password" required="" lay-verify="pass"
+                           autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    6到16个字符
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="L_repass" class="layui-form-label">
+                    <span class="x-red">*</span>确认密码
+                </label>
+                <div class="layui-input-inline">
+                    <input type="password" id="L_repass" name="used_pwd" required="" lay-verify="repass"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="" class="layui-form-label">
+                </label>
+                <button  class="layui-btn" lay-filter="add" lay-submit="">
+                    确认
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="__STATIC__/js/jquery-2.1.4.min.js"></script>
+<script src="__STATIC__/js/common.js"></script>
+<script>layui.use(['form', 'layer'],
+    function() {
+        $ = layui.jquery;
+        var form = layui.form,
+            layer = layui.layer;
+
+        //自定义验证规则
+        form.verify({
+            name: function(value) {
+                if (value.length < 2 || value > 10) {
+                    return '规则名称长度在3~10字符之间';
+                }
+            },
+            pass: [/(.+){6,16}$/, '密码必须6到16位'],
+            repass: function(value) {
+                if ($('#L_pass').val() != $('#L_repass').val()) {
+                    return '两次密码不一致';
+                }
+            },
+        });
+    });
+</script>
+</body>
+
+</html>

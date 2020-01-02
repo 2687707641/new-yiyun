@@ -54,7 +54,6 @@ class Manager extends Base
             log_write('删除管理员:' . $this->_param['name'], $manager->getLastSql());
             $this->success('删除成功!', 'lists');
         }
-
     }
 
     /***

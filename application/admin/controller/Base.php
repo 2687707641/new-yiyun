@@ -150,6 +150,9 @@ class Base extends Controller
                     if(is_array($v)) break;
                     $where['name'] = ['like','%' . $v . '%'];
                     break;
+                case 'nickname':
+                    $where['nickname'] = ['like','%' . $v . '%'];
+                    break;
             }
         }
         $where['create_time'] = ['between time',$between_time];
