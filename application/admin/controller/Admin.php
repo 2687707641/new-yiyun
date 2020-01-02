@@ -19,8 +19,13 @@ class Admin extends Controller
     
 
     //登录页面
-    public function login()
+    public function login($msg = '')
     {
+        if(!empty($msg)){
+            echo "<script>".chr(10);
+            echo "alert(\"{$msg}\");".chr(10);
+            echo "</script>".chr(10);
+        }
         if($this->request->isPost()){
             $rules = [
                 ['username','require|length:5,12','登录名不能为空|登录名在5~12字符之间'],

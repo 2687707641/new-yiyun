@@ -48,7 +48,7 @@ class Base extends Controller
         //获取当前用户(管理员)信息
         $auth_info = Session::get('auth_info', 'think');
         if (empty($auth_info)) {
-            $this->redirect('Admin/login');
+            $this->redirect('Admin/login',['msg' => '未获取到登录用户信息,请重新登录']);
         }
         $group = new AuthGroupModel();
         $rule  = new AuthRuleModel();
@@ -60,17 +60,18 @@ class Base extends Controller
             //获取所有权限
             $menu = $rule->cate_tree($where);
         } else {
+            $where['id'] = $auth_info['role_id'];
             //查询权限列表
-            $rules = $group->where('id', $auth_info['role_id'])->column('rules');
+            $rules = $group->where($where)->column('rules');
             if(empty($rules)){
-                $this->redirect('Admin/login');
+                $this->redirect('Admin/login',['msg' => '未获取到角色权限信息,请重新登录']);
             }
             $arr   = explode(',', $rules[0]);
             $where['id'] = ['in',$arr];
             $menu = $rule->cate_tree($where);
         }
         if (empty($menu)) {
-            $this->redirect('Admin/login');
+            $this->redirect('Admin/login',['msg' => '未获取到可展示菜单,请重新登录']);
         }
         $this->assign('menu', $menu);
     }
@@ -85,7 +86,7 @@ class Base extends Controller
         $auth_info = Session::get('auth_info', 'think');
         if (empty($auth_info)) {
             //重定向至登录界面
-            $this->redirect('Admin/login');
+            $this->redirect('Admin/login',['msg' => '未获取到登录信息,请重新登录']);
         }
         if ($auth_info['id'] == 1 && $auth_info['username'] == 'admin') {
             return true;
