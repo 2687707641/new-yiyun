@@ -17,7 +17,8 @@ class Base extends Controller
     public function __construct(Request $request)
     {
         // 指定允许其他域名访问
-        header('Access-Control-Allow-Origin:*');  //支持全域名访问
+//        header('Access-Control-Allow-Origin:*');  //支持全域名访问
+        header('Access-Control-Allow-Origin:http://localhost:8080');//表示接受http://localhost:8081的请求
         header('Access-Control-Allow-Methods:POST,GET'); //支持的http动作
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Max-Age: 1000');
@@ -28,8 +29,8 @@ class Base extends Controller
         // 请求方式检测
         $this->request = $request;
 //        $this->method  = strtolower($request->method());
-        Log::info('------',print_r($request->getInput(),true));
-        $this->params = $this->check_params($request->param());
+        $data = json_decode($request->getInput(),true);
+        $this->params = $this->check_params($data);
     }
 
     /***
