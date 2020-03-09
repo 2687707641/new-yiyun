@@ -28,8 +28,8 @@ class Base extends Controller
         // 请求方式检测
         $this->request = $request;
 //        $this->method  = strtolower($request->method());
-        $this->params = $this->check_params($request->param());
         Log::info('------',print_r($request->getInput()));
+        $this->params = $this->check_params($request->param());
     }
 
     /***
