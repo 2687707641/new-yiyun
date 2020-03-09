@@ -4,6 +4,7 @@
 namespace app\API\controller;
 
 use think\Controller;
+use think\Log;
 use think\Request;
 
 
@@ -28,6 +29,7 @@ class Base extends Controller
         $this->request = $request;
 //        $this->method  = strtolower($request->method());
         $this->params = $this->check_params($request->param());
+        Log::info('------',print_r($request->getInput()));
     }
 
     /***
