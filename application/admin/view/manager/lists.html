@@ -91,8 +91,8 @@
                         return d.role_name;
                     }}
                 , {field: 'login_ip', title: '登录IP', width: 140}
-                , {field: 'last_login_time', title: '上次登录时间', sort: true}
-                , {field: 'login_times', title: '登录次数', width: 100}
+               // , {field: 'last_login_time', title: '上次登录时间', sort: true}
+               // , {field: 'login_times', title: '登录次数', width: 100}
                 , {
                     field: 'status', title: '状态', width: 100, templet: function (d) {
                         if (d.status == 1)
@@ -100,7 +100,7 @@
                         return '<span class="layui-btn layui-btn-normal layui-btn-mini layui-btn-disabled">已禁用</span>';
                     }
                 }
-                , {field: 'create_time', title: '创建时间', sort: true}
+              //  , {field: 'create_time', title: '创建时间', sort: true}
                 , {
                     field: 'right', title: '操作', templet: function (d) {
                         if (d.id == 1 && d.username == 'admin') {
