@@ -16,3 +16,16 @@ Route::post('user/login','api/user/login');
 
 //查看session
 Route::post('user/look_session','api/user/look_session');
+
+//用户修改密码
+Route::post('user/change_pwd','api/user/change_pwd');
+
+
+/***
+ * 商品接口
+ */
+//获取分类列表
+Route::get('book/get_cate','api/book/get_cate');
+
+//获取商品信息
+Route::post('book/get_book','api/book/get_book');

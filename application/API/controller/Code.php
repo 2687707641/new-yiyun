@@ -7,6 +7,10 @@ use qcloudsms\SmsSingleSender;
 use app\api\model\User;
 use think\Session;
 
+/***
+ * Class Code 验证码相关
+ * @package app\api\controller
+ */
 class Code extends Base
 {
     protected $num = 6; // 验证码长度
@@ -16,18 +20,26 @@ class Code extends Base
      */
     public function get_code()
     {
+        $data = $this->request->param();
+        //验证参数
+        $rules = [
+            ['phone', 'require|/^1[34578]\d{9}$/', '手机号不能为空|手机号格式不正确'],
+            ['is_exist', 'require|in:0,1'],
+        ];
+        $msg   = $this->validate($data, $rules);
+        if ($msg !== true) $this->return_msg(400,$msg);
         //检查手机号是否存在
         $user = new User();
-        $res  = $user->check_exist($this->params['phone'], $this->params['is_exist']);
+        $res  = $user->check_exist($data['phone'], $data['is_exist']);
         if ($res !== true)
             $this->return_msg('400', $res);
         //检查发送频率
-        $last_send_time = Session::get($this->params['phone'] . '_last_send_time','think');
+        $last_send_time = Session::get($data['phone'] . '_last_send_time','think');
         if($last_send_time !== null && time()-$last_send_time<= 60)
             $this->return_msg('400','验证码60s发送一次');
         //发送验证码
         $code = $this->make_code($this->num);
-        $this->send_code($this->params['phone'], $code);
+        $this->send_code($data['phone'], $code);
     }
 
     /***

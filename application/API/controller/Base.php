@@ -7,7 +7,10 @@ use think\Controller;
 use think\Log;
 use think\Request;
 
-
+/***
+ * Class Base 接口控制器基类
+ * @package app\API\controller
+ */
 class Base extends Controller
 {
     //定义公用参数
@@ -18,7 +21,7 @@ class Base extends Controller
     {
         // 指定允许其他域名访问
 //        header('Access-Control-Allow-Origin:*');  //支持全域名访问
-        header('Access-Control-Allow-Origin:http://localhost:8080');//表示接受http://localhost:8081的请求
+        header('Access-Control-Allow-Origin:http://localhost:8080');//表示接受http://localhost:8080的请求
         header('Access-Control-Allow-Methods:POST,GET'); //支持的http动作
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Max-Age: 1000');
@@ -29,8 +32,8 @@ class Base extends Controller
         // 请求方式检测
         $this->request = $request;
 //        $this->method  = strtolower($request->method());
-        $data = json_decode($request->getInput(),true);
-        $this->params = $this->check_params($data);
+        $this->params = json_decode($request->getInput(),true); //接收的参数
+//        $this->params = $this->check_params($data);
     }
 
     /***
