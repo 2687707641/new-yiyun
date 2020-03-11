@@ -100,7 +100,7 @@ class Manager extends Base
             $this->check_authority();
             $rules = [
                 ['username', 'require|length:5,10|alphaNum|unique:manager', '登录名不能为空|登录名长度应在5~10字符之间|登录名只能包含字母数字|该用户已存在'],
-                ['nickname', 'require|length:3,10|chsAlphaNum|unique:manager', '昵称不能为空|昵称长度应在2~5字符之间|昵称只能包含汉字、字母和数字|该昵称已被占用'],
+                ['nickname', 'require|length:3,15|chsAlphaNum|unique:manager', '昵称不能为空|昵称长度应在2~5字符之间|昵称只能包含汉字、字母和数字|该昵称已被占用'],
                 ['password', 'require|length:6,16', '密码不能为空|昵称长度应在6~16字符之间'],
             ];
             $msg   = $this->validate($this->_param, $rules);
