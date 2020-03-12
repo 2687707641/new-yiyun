@@ -52,7 +52,6 @@ class Code extends Base
         $max = pow(10, $num) - 1; //999999
         $min = pow(10, $num - 1); //100000
         return rand($min, $max);
-
     }
 
     /***
