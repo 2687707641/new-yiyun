@@ -29,3 +29,6 @@ Route::get('book/get_cate','api/book/get_cate');
 
 //获取商品信息
 Route::post('book/get_book','api/book/get_book');
+
+//获取热卖商品信息
+Route::get('book/hot_book','api/book/hot_book');

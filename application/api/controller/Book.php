@@ -27,6 +27,9 @@ class Book extends Base
         }
     }
 
+    /***
+     * 获取商品信息
+     */
     public function get_book()
     {
         $rules = [
@@ -36,6 +39,17 @@ class Book extends Base
         if ($msg !== true) $this->return_msg(400,$msg);
         $book = new BookModel();
         $lists = $book->field('id,name,pid,remark,prince,number,author,picture')->where('pid',$this->params['cate_id'])->select();
+        if(empty($lists)) $this->return_msg(400,'该分类下暂无商品信息');
+        $this->return_msg(200,'查询成功',$lists);
+    }
+
+    /***
+     * 获取热卖商品信息
+     */
+    public function hot_book()
+    {
+        $book = new BookModel();
+        $lists = $book->field('id,name,remark,prince,number,author,picture,sales')->order('sales desc')->select();
         if(empty($lists)) $this->return_msg(400,'该分类下暂无商品信息');
         $this->return_msg(200,'查询成功',$lists);
     }
