@@ -21,7 +21,7 @@ class Base extends Controller
     {
         // 指定允许其他域名访问
 //        header('Access-Control-Allow-Origin:*');  //支持全域名访问
-        header('Access-Control-Allow-Origin:http://localhost:80');//表示接受http://localhost:8080的请求
+        header('Access-Control-Allow-Origin:http://whatgoingon.cn');//表示接受http://localhost:8080的请求
         header('Access-Control-Allow-Methods:POST,GET'); //支持的http动作
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Max-Age: 1000');
