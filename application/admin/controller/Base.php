@@ -25,7 +25,7 @@ class Base extends Controller
     protected $_row = 10; //分页初始条数
     //筛选条件(LayUI表格用)
     protected $_condition = [];
-    
+
     //初始化加载
     public function _initialize()
     {
@@ -34,8 +34,8 @@ class Base extends Controller
         //读取菜单
         $this->get_menu();
         //获取参数
-        $this->_param = $this->request->param();
-        $this->_map   = $this->request->get();
+        $this->_param     = $this->request->param();
+        $this->_map       = $this->request->get();
         $this->_condition = $this->get_condition();
         //将公用数据分配至所有页面
         $this->assign('user', $this->_user); //当前登录用户
@@ -48,13 +48,13 @@ class Base extends Controller
         //获取当前用户(管理员)信息
         $auth_info = Session::get('auth_info', 'think');
         if (empty($auth_info)) {
-            $this->redirect('Admin/login',['msg' => '未获取到登录用户信息,请重新登录']);
+            $this->redirect('Admin/login', ['msg' => '未获取到登录用户信息,请重新登录']);
         }
         $group = new AuthGroupModel();
         $rule  = new AuthRuleModel();
         $where = [
             'deleted' => 0,
-            'status' => 1,
+            'status'  => 1,
         ];
         if ($auth_info['id'] == 1 && $auth_info['username'] == 'admin') {
             //获取所有权限
@@ -63,15 +63,15 @@ class Base extends Controller
             $where['id'] = $auth_info['role_id'];
             //查询权限列表
             $rules = $group->where($where)->column('rules');
-            if(empty($rules)){
-                $this->redirect('Admin/login',['msg' => '未获取到角色权限信息,请重新登录']);
+            if (empty($rules)) {
+                $this->redirect('Admin/login', ['msg' => '未获取到角色权限信息,请重新登录']);
             }
-            $arr   = explode(',', $rules[0]);
-            $where['id'] = ['in',$arr];
-            $menu = $rule->cate_tree($where);
+            $arr         = explode(',', $rules[0]);
+            $where['id'] = ['in', $arr];
+            $menu        = $rule->cate_tree($where);
         }
         if (empty($menu)) {
-            $this->redirect('Admin/login',['msg' => '未获取到可展示菜单,请重新登录']);
+            $this->redirect('Admin/login', ['msg' => '未获取到可展示菜单,请重新登录']);
         }
         $this->assign('menu', $menu);
     }
@@ -86,16 +86,16 @@ class Base extends Controller
         $auth_info = Session::get('auth_info', 'think');
         if (empty($auth_info)) {
             //重定向至登录界面
-            $this->redirect('Admin/login',['msg' => '未获取到登录信息,请重新登录']);
+            $this->redirect('Admin/login', ['msg' => '未获取到登录信息,请重新登录']);
         }
         if ($auth_info['id'] == 1 && $auth_info['username'] == 'admin') {
             return true;
         }
         //查询规则信息
         $competency      = new AuthComModel();
-        $where = [
-            'url' => $url,
-            'status' => 1,
+        $where           = [
+            'url'     => $url,
+            'status'  => 1,
             'deleted' => 0,
         ];
         $competency_info = $competency->where($where)->find();
@@ -118,11 +118,11 @@ class Base extends Controller
      */
     public function get_condition()
     {
-        $where  = array();
-        $page   = 1;
-        $offset = 10;
-        $order = 'id desc';
-        $between_time = ['1970-01-01','9999-12-30'];
+        $where        = array();
+        $page         = 1;
+        $offset       = 10;
+        $order        = 'id desc';
+        $between_time = ['1970-01-01', '9999-12-30'];
         foreach ($this->_map as $k => $v) {
             switch ($k) {
                 case 'page' :
@@ -135,35 +135,60 @@ class Base extends Controller
                     $order = $v;
                     break;
                 case 'start':
-                   if (!empty($v)) $between_time[0] = $v;
+                    if (!empty($v)) $between_time[0] = $v;
                     break;
                 case 'end':
                     if (!empty($v)) $between_time[1] = $v;
                     break;
                 case 'username':
-                    $where['username'] = ['like','%' . $v . '%'];
+                    $where['username'] = ['like', '%' . $v . '%'];
                     break;
                 case 'role_name':
-                    $where['role_name'] = ['like','%' . $v . '%'];
+                    $where['role_name'] = ['like', '%' . $v . '%'];
                     break;
                 case 'name':
-                    if(is_array($v)) break;
-                    $where['name'] = ['like','%' . $v . '%'];
+                    if (is_array($v)) break;
+                    $where['name'] = ['like', '%' . $v . '%'];
                     break;
                 case 'nickname':
-                    $where['nickname'] = ['like','%' . $v . '%'];
+                    $where['nickname'] = ['like', '%' . $v . '%'];
                     break;
             }
         }
-        $where['create_time'] = ['between time',$between_time];
-        $limit = ($page - 1) * $offset . ',' . $offset;
-        $condition = array(
+        $where['create_time'] = ['between time', $between_time];
+        $limit                = ($page - 1) * $offset . ',' . $offset;
+        $condition            = array(
             'where' => $where, //过滤条件
             'order' => $order, //排序
             'limit' => $limit, //分页参数
             'with'  => '',     //关联
         );
         return $condition;
+    }
+
+    /***
+     * 图片上传
+     */
+    public function img_upload()
+    {
+        //定义目录
+        $path = ROOT_PATH . 'public' . DS . 'image' . DS . 'book';
+        //获取上传图片并保存到对应目录
+        $file = request()->file('image');
+        $arr  = [
+            'code' => 0,
+            'msg'  => '',
+            'data' => [],
+        ];
+        $info = $file->move($path);
+        if ($info) {
+            $save_path = DS . 'image' . DS . 'book' . DS . $info->getSaveName();
+            $arr['data'] = $save_path;
+        } else {
+            $arr['code'] = 400;
+            $arr['msg']  =  $file->getError();
+        }
+        echo json_encode($arr);
     }
 
 }
