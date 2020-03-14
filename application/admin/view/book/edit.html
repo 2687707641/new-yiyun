@@ -10,15 +10,44 @@
         <form class="layui-form ajax_post_reload" action="{$_self_}">
             <div class="layui-form-item">
                 <label for="name" class="layui-form-label">
-                    <span class="x-red">*</span>分类名称</label>
+                    <span class="x-red">*</span>商品名称</label>
                 <div class="layui-input-inline">
                     <input type="text" id="name" name="name" required="" lay-verify="required" autocomplete="off" class="layui-input" value="{$info['name']|default=''}" placeholder="必填项"></div>
             </div>
             <div class="layui-form-item">
-                <label for="url" class="layui-form-label">
+                <label for="author" class="layui-form-label">
+                    作者</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="author" name="author" autocomplete="off" class="layui-input" value="{$info['author']|default='匿名'}"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="remark" class="layui-form-label">
                     描述</label>
                 <div class="layui-input-inline">
-                    <input type="text" id="url" name="remark" autocomplete="off" class="layui-input" value="{$info['remark']|default=''}"></div>
+                    <input type="text" id="remark" name="remark" autocomplete="off" class="layui-input" value="{$info['remark']|default=''}"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    <span class="x-red">*</span>所属栏目</label>
+                <div class="layui-input-inline">
+                    <select id="shipping" name="pid" class="valid">
+                        {volist name="lists" id="vo"}
+                        <option value="{$vo['id']}" {if isset($info['pid'])&&$info['pid']==$vo['id'] }selected{/if}>{$vo['name']}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="prince" class="layui-form-label">
+                    <span class="x-red">*</span>价格</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="prince" name="prince" required="" lay-verify="required" autocomplete="off" class="layui-input" value="{$info['prince']|default=''}"></div>
+            </div>
+            <div class="layui-form-item">
+                <label for="number" class="layui-form-label">
+                    <span class="x-red">*</span>数量</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="number" name="number" required="" lay-verify="required" autocomplete="off" class="layui-input" value="{$info['number']|default=''}"></div>
             </div>
             <input type="hidden" name="picture" id="picture" value="{$info['picture']|default=''}">
             <div class="layui-upload">

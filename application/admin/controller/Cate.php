@@ -91,6 +91,7 @@ class Cate extends Base
             $this->assign('info',$info);
         }
         if($this->request->isPost()){
+            $this->check_authority();
             $rules = [
                 ['name','require|length:2,10|chsAlphaNum','菜单名不能为空|菜单长度在2~10个字符之间|菜单名只能为数字,字母和汉字'],
             ];
