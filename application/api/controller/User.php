@@ -116,11 +116,13 @@ class User extends Base
         }
     }
 
-    //测试session
-    public function look_session()
+    /***
+     * 获取登录用户信息
+     */
+    public function user_info()
     {
         $info = Session::get('user');
-        Log::info('----', print_r($info, true));
+        if(empty($info)) $this->return_msg(400,'未获取到登录信息',[]);
         $this->return_msg(200, '查看成功!', $info);
     }
 }

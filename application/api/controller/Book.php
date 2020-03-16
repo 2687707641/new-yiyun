@@ -49,8 +49,20 @@ class Book extends Base
     public function hot_book()
     {
         $book = new BookModel();
-        $lists = $book->field('id,name,remark,prince,number,author,picture,sales')->order('sales desc')->select();
+        $lists = $book->field('id,name,remark,prince,number,author,picture,sales')->order('sales desc')->limit(0,8)->select();
         if(empty($lists)) $this->return_msg(400,'该分类下暂无商品信息');
         $this->return_msg(200,'查询成功',$lists);
+    }
+
+    /***
+     * 获取导航栏信息
+     */
+    public function navigation_bar()
+    {
+        $cate = new Cate();
+        $info = $cate->alias('c')->join('book b','c.id = b.pid', 'left')
+                ->field('c.id cate_id,c.name cate_name,c.picture cate_picture, b.id book_id, count(*) sum b.pid')
+                ->select();
+        echo json_encode($info);
     }
 }

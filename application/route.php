@@ -14,8 +14,8 @@ Route::post('user/register','api/user/register');
 //用户登录
 Route::post('user/login','api/user/login');
 
-//查看session
-Route::post('user/look_session','api/user/look_session');
+//获取登录用户
+Route::get('user/user_info','api/user/user_info');
 
 //用户修改密码
 Route::post('user/change_pwd','api/user/change_pwd');
@@ -32,3 +32,5 @@ Route::post('book/get_book','api/book/get_book');
 
 //获取热卖商品信息
 Route::get('book/hot_book','api/book/hot_book');
+
+Route::get('book/navigation_bar','api/book/navigation_bar');
