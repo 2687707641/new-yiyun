@@ -20,10 +20,10 @@ class Book extends Base
     {
         $cate = new Cate();
         $data = $cate->cate_tree();
-        if(!empty($data)){
-            $this->return_msg(200,'查询成功',$data);
-        }else{
-            $this->return_msg(400,'查询失败',$data);
+        if (!empty($data)) {
+            $this->return_msg(200, '查询成功', $data);
+        } else {
+            $this->return_msg(400, '查询失败', $data);
         }
     }
 
@@ -33,14 +33,14 @@ class Book extends Base
     public function get_book()
     {
         $rules = [
-           ['cate_id','require|number','分类ID不能为空|参数格式错误']
+            ['cate_id', 'require|number', '分类ID不能为空|参数格式错误']
         ];
         $msg   = $this->validate($this->params, $rules);
-        if ($msg !== true) $this->return_msg(400,$msg);
-        $book = new BookModel();
-        $lists = $book->field('id,name,pid,remark,prince,number,author,picture')->where('pid',$this->params['cate_id'])->select();
-        if(empty($lists)) $this->return_msg(400,'该分类下暂无商品信息');
-        $this->return_msg(200,'查询成功',$lists);
+        if ($msg !== true) $this->return_msg(400, $msg);
+        $book  = new BookModel();
+        $lists = $book->field('id,name,pid,remark,prince,number,author,picture')->where('pid', $this->params['cate_id'])->select();
+        if (empty($lists)) $this->return_msg(400, '该分类下暂无商品信息');
+        $this->return_msg(200, '查询成功', $lists);
     }
 
     /***
@@ -48,10 +48,10 @@ class Book extends Base
      */
     public function hot_book()
     {
-        $book = new BookModel();
-        $lists = $book->field('id,name,remark,prince,number,author,picture,sales')->order('sales desc')->limit(0,8)->select();
-        if(empty($lists)) $this->return_msg(400,'该分类下暂无商品信息');
-        $this->return_msg(200,'查询成功',$lists);
+        $book  = new BookModel();
+        $lists = $book->field('id,name,remark,prince,number,author,picture,sales')->order('sales desc')->limit(0, 8)->select();
+        if (empty($lists)) $this->return_msg(400, '该分类下暂无商品信息');
+        $this->return_msg(200, '查询成功', $lists);
     }
 
     /***
@@ -59,10 +59,56 @@ class Book extends Base
      */
     public function navigation_bar()
     {
-        $cate = new Cate();
-        $info = $cate->alias('c')->join('book b','c.id = b.pid', 'left')
-                ->field('c.id cate_id,c.name cate_name,c.picture cate_picture, b.id book_id, count(*) sum b.pid')
-                ->select();
-        echo json_encode($info);
+        $cate      = new Cate();
+        $book      = new BookModel();
+        $where     = [
+            'status'  => '1',
+            'deleted' => '0'
+        ];
+        $res_arr   = [];
+        $cate_info = $cate->where($where)->field('id,name,picture')->select();
+        foreach ($cate_info as $k => $v) {
+            $res_arr[$k]['id']      = $v['id'];
+            $res_arr[$k]['name']    = $v['name'];
+            $res_arr[$k]['picture'] = $v['picture'];
+            //查询当前分类下的热门商品信息
+            $where['pid']             = $v['id'];
+            $res_arr[$k]['sum']       = $book->where($where)->count();
+            $book_info                = $book->where($where)->field('id,name,prince,picture')->order('sales desc')->limit(1)->select();
+            $res_arr[$k]['book_info'] = $book_info;
+        }
+        $this->return_msg(200, '查询成功', $res_arr);
+    }
+
+    /***
+     * 商品详情
+     */
+    public function book_details()
+    {
+        $rules = [
+            ['book_id', 'require|number', '商品ID不能为空|参数错误'],
+        ];
+        $msg   = $this->validate($this->params, $rules);
+        if ($msg !== true) $this->return_msg(400, $msg);
+        $book  = new BookModel();
+        $where = [
+            'b.id' => $this->params['book_id'],
+        ];
+        //排除某些字段
+        $book_info = $book->alias('b')->join('cate c', 'b.pid = c.id')->where($where)
+            ->field('b.id,b.name,b.remark,b.pid,b.prince,b.number,b.author,b.picture,b.sales,c.name cate_name')
+            ->find();
+        if (empty($book_info)) $this->return_msg(400, '暂无信息', []);
+        //查询该分类下的其他商品信息
+        $where       = [
+            'pid' => $book_info['pid'],
+            'id'  => ['<>', $this->params['book_id']],
+        ];
+        $others_info = $book->where($where)->field('id,name,picture,prince')->select();
+        $res_arr     = [
+            'book_details' => $book_info,
+            'others'       => $others_info,
+        ];
+        $this->return_msg(200, '查询成功', $res_arr);
     }
 }

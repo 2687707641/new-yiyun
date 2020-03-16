@@ -33,4 +33,8 @@ Route::post('book/get_book','api/book/get_book');
 //获取热卖商品信息
 Route::get('book/hot_book','api/book/hot_book');
 
+//获取导航栏信息
 Route::get('book/navigation_bar','api/book/navigation_bar');
+
+//获取商品详情
+Route::post('book/book_details','api/book/book_details');
