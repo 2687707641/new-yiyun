@@ -112,11 +112,11 @@
                     }
                 }
             ]]
-            // , initSort: {
-                //默认排序
-                // field: 'id'
-                // , type: 'desc'
-            // }
+            , initSort: {
+                // 默认排序
+                field: 'sales'
+                , type: 'desc'
+            }
             , done: function (res, curr, count) {
                 //res:接口返回信息, curr:当前页码, count:数据总量
                 if (count == 0) {
@@ -174,6 +174,8 @@
             if (obj.type != 'desc' && obj.type != 'asc') {
                 obj.type = 'asc';
             }
+            if(obj.field == 'cate_name')
+                obj.field = 'pid';
             table.reload('idTest', {
                 initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。 layui 2.1.1 新增参数
                 , where: {
