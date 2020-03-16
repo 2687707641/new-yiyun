@@ -92,7 +92,7 @@
                 , {field: 'number', title: '数量',sort:true}
                 , {field: 'prince', title: '价格',sort:true}
                 , {field: 'sales', title: '销量',sort:true}
-                , {field: 'cate_name', title: '所属分类',sort:true}
+                , {field: 'cate_name', title: '所属分类'}
                 // , {field: 'create_time', title: '创建时间', sort: true}
                 , {
                     field: 'status', title: '状态', width: 100, templet: function (d) {
@@ -174,8 +174,6 @@
             if (obj.type != 'desc' && obj.type != 'asc') {
                 obj.type = 'asc';
             }
-            if(obj.field == 'cate_name')
-                obj.field = 'pid';
             table.reload('idTest', {
                 initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。 layui 2.1.1 新增参数
                 , where: {
