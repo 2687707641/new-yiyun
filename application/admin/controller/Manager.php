@@ -27,9 +27,9 @@ class Manager extends Base
         $this->_condition['where']['deleted'] = 0;
         $this->_condition['with'] = 'role';
 //        //非超级管理员只能看到自己
-//        if($this->_user['id'] != 1 || $this->_user['username'] != 'admin'){
-//            $this->_condition['where']['id'] = $this->_user['id'];
-//        }
+        if($this->_user['id'] != 1 || $this->_user['username'] != 'admin'){
+            $this->_condition['where']['id'] = $this->_user['id'];
+        }
         $data  = $manager->get_data_list($this->_condition);
         $count = $manager->get_data_count($this->_condition['where']);
         response_json('', $data, $count);

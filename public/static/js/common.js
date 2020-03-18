@@ -269,6 +269,7 @@ function _ajax_send(url,data,method,iframeReload = false,refalse = false) {
         error : function (xhr,status,error) {
             //错误处理 xhr->详细数据, status->error, error->错误提示
             layer.msg('服务器出现异常,请检查后重试',{icon: 2});
+            console.log(xhr);
         },
         complete: function () {
             //请求完成后
