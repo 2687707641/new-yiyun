@@ -21,7 +21,18 @@ class Base extends Controller
     {
         // 指定允许其他域名访问
 //        header('Access-Control-Allow-Origin:*');  //支持全域名访问
-        header('Access-Control-Allow-Origin:http://www.whatgoingon.cn');//表示接受http://localhost:8080的请求
+        $allow_origin = [
+            'http://localhost:8080',
+            'http://whatgoingon.cn',
+            'whatgoingon.cn'
+        ];
+        $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';  //跨域访问的时候才会存在此字段
+//        header('Access-Control-Allow-Origin:http://www.whatgoingon.cn');//表示接受http://localhost:8080的请求
+        if (in_array($origin, $allow_origin)) {
+            header('Access-Control-Allow-Origin:' . $origin);
+        } else {
+            return;
+        }
         header('Access-Control-Allow-Methods:POST,GET'); //支持的http动作
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Max-Age: 1000');
