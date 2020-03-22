@@ -23,7 +23,7 @@ class Base extends Controller
 //        header('Access-Control-Allow-Origin:*');  //支持全域名访问
         $allow_origin = [
             'http://localhost:8080',
-            'http://whatgoingon.cn',
+            'http://www.whatgoingon.cn',
             'whatgoingon.cn'
         ];
         $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';  //跨域访问的时候才会存在此字段
