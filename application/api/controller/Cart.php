@@ -101,4 +101,17 @@ class Cart extends Base
             $this->return_msg(400,'删除失败');
         }
     }
+
+    /***
+     * 查询购物车商品数量
+     */
+    public function get_cart_items()
+    {
+        //获取登录用户信息
+        $user_info = $this->get_user_info();
+        $cart = new CartModel();
+        $num = $cart->where('uid',$user_info['id'])->sum('number');
+        $arr['num'] = $num;
+        $this->return_msg(200,'查询成功',$arr);
+    }
 }

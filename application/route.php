@@ -54,4 +54,6 @@ Route::get('cart/cart_details','api/cart/cart_details');
 //删除购物车商品
 Route::post('cart/clear_cart','api/cart/clear_cart');
 
+//查看购物车数量
+Route::get('cart/get_cart_items','api/cart/get_cart_items');
 
