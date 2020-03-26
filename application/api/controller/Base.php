@@ -6,6 +6,7 @@ namespace app\API\controller;
 use think\Controller;
 use think\Log;
 use think\Request;
+use think\Session;
 
 /***
  * Class Base 接口控制器基类
@@ -30,9 +31,10 @@ class Base extends Controller
 //        header('Access-Control-Allow-Origin:http://www.whatgoingon.cn');//表示接受http://localhost:8080的请求
         if (in_array($origin, $allow_origin)) {
             header('Access-Control-Allow-Origin:' . $origin);
-        } else {
-            return;
         }
+//       else {
+//            return;
+//        }
         header('Access-Control-Allow-Methods:POST,GET'); //支持的http动作
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Max-Age: 1000');
@@ -79,5 +81,15 @@ class Base extends Controller
             $this->return_msg('400', $this->validater);
         }
         return $arr;
+    }
+
+    /***
+     * 获取登录用户信息
+     */
+    public function get_user_info()
+    {
+        $info = Session::get('user');
+        if(empty($info)) $this->return_msg(400,'未获取到登录信息');
+        return $info;
     }
 }

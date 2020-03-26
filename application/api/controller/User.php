@@ -18,7 +18,6 @@ class User extends Base
      */
     public function register()
     {
-        Log::info('----',print_r($this->params,true));
         //检查参数
         $rules = [
             ['phone', 'require|/^1[34578]\d{9}$/', '手机号不能为空|手机号格式不正确'],
@@ -75,7 +74,7 @@ class User extends Base
         $msg   = $this->validate($this->params, $rules);
         if ($msg !== true) $this->return_msg(400,$msg);
         $user = new UserModel();
-        $info = $user->field('id,phone,password,nickname')->where('phone', $this->params['phone'])->find();
+        $info = $user->field('id,phone,password,nickname,address')->where('phone', $this->params['phone'])->find();
         if ($info['password'] !== md5($this->params['password'])) {
             $this->return_msg(400, '用户名或密码不正确!');
         } else {
@@ -121,8 +120,32 @@ class User extends Base
      */
     public function user_info()
     {
-        $info = Session::get('user');
-        if(empty($info)) $this->return_msg(400,'未获取到登录信息',[]);
+        $info = $this->get_user_info();
         $this->return_msg(200, '查看成功!', $info);
     }
+
+    /***
+     * 编辑收货地址
+     */
+    public function receiving_address()
+    {
+        //获取登录用户
+        $info = $this->get_user_info();
+//        $info = Session::get('user');
+//        if(empty($info)) $this->return_msg(400,'未获取到登录信息,请登录后重试');
+        //检查参数
+        $rules = [
+            ['address', 'require|chsDash', '收货地址不能为空|收货地址只能为为汉字,字母和数字,下划线_及破折号-'],
+        ];
+        $msg   = $this->validate($this->params, $rules);
+        if ($msg !== true) $this->return_msg(400,$msg);
+        $user = new UserModel();
+        $res = $user->edit(['address'=>$this->params['address']],['id'=>$info['id']]);
+        if ($res !== false) {
+            $this->return_msg(200, '编辑收货地址成功!');
+        } else {
+            $this->return_msg(500, '编辑收货地址失败!');
+        }
+    }
+
 }

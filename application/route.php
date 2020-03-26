@@ -20,6 +20,8 @@ Route::get('user/user_info','api/user/user_info');
 //用户修改密码
 Route::post('user/change_pwd','api/user/change_pwd');
 
+//用户修改收货地址
+Route::post('user/receiving_address','api/user/receiving_address');
 
 /***
  * 商品接口
@@ -38,3 +40,18 @@ Route::get('book/navigation_bar','api/book/navigation_bar');
 
 //获取商品详情
 Route::post('book/book_details','api/book/book_details');
+
+
+/***
+ * 购物车相关
+ */
+//添加商品至购物车
+Route::post('cart/add_to_cart','api/cart/add_to_cart');
+
+//查看购物车详情
+Route::get('cart/cart_details','api/cart/cart_details');
+
+//删除购物车商品
+Route::post('cart/clear_cart','api/cart/clear_cart');
+
+

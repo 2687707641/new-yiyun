@@ -5,6 +5,7 @@ namespace app\admin\controller;
 
 use app\admin\model\Manager as ManagerModel;
 use think\Controller;
+use think\Log;
 use think\Session;
 
 class Admin extends Controller
