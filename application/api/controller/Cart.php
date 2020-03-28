@@ -62,15 +62,15 @@ class Cart extends Base
             'uid' => $user_info['id'],
         ];
         $cart_info = $cart->field('id,book_id,number')->where($where)->select();
-        if(empty($cart_info)) $this->return_msg('20004','无购物车数据',[]);
-        $res_arr   = [];
-        $book      = new BookModel();
+        if (empty($cart_info)) $this->return_msg('20004', '无购物车数据', []);
+        $res_arr = [];
+        $book    = new BookModel();
         foreach ($cart_info as $k => $v) {
             $res_arr[$k]['id']       = $v['id']; //商品ID
             $res_arr[$k]['number']   = $v['number'];//购物车中该商品数量
-            $book_info               = $book->where('id', $v['id'])->field('name,picture,discount')->find();
+            $book_info               = $book->where('id', $v['id'])->field('name,picture,discount,prince')->find();
             $res_arr[$k]['name']     = $book_info['name']; //商品名称
-            $res_arr[$k]['prince']     = $book_info['prince']; //商品单价
+            $res_arr[$k]['prince']   = $book_info['prince']; //商品单价
             $res_arr[$k]['picture']  = $book_info['picture']; //商品封面图
             $res_arr[$k]['discount'] = $book_info['discount']; //商品折扣
         }
@@ -90,16 +90,16 @@ class Cart extends Base
         ];
         $msg   = $this->validate($this->params, $rules);
         if ($msg !== true) $this->return_msg($msg, '参数错误');
-        $cart = new CartModel();
-        $where     = [
+        $cart  = new CartModel();
+        $where = [
             'uid'     => $user_info['id'],
             'book_id' => $this->params['book_id'],
         ];
-        $res = $cart->del($where);
-        if($res !== false){
-            $this->return_msg('00000','删除购物车成功');
-        }else{
-            $this->return_msg('20003','删除购物车失败');
+        $res   = $cart->del($where);
+        if ($res !== false) {
+            $this->return_msg('00000', '删除购物车成功');
+        } else {
+            $this->return_msg('20003', '删除购物车失败');
         }
     }
 
@@ -109,10 +109,10 @@ class Cart extends Base
     public function get_cart_items()
     {
         //获取登录用户信息
-        $user_info = $this->get_user_info();
-        $cart = new CartModel();
-        $num = $cart->where('uid',$user_info['id'])->sum('number');
+        $user_info  = $this->get_user_info();
+        $cart       = new CartModel();
+        $num        = $cart->where('uid', $user_info['id'])->sum('number');
         $arr['num'] = $num;
-        $this->return_msg('00000','查询成功',$arr);
+        $this->return_msg('00000', '查询成功', $arr);
     }
 }
