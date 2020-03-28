@@ -23,7 +23,7 @@ class Book extends Base
         if (!empty($data)) {
             $this->return_msg('00000', '查询成功', $data);
         } else {
-            $this->return_msg('20004', '查询失败', $data);
+            $this->return_msg('20004', '查询失败,暂无信息', []);
         }
     }
 
@@ -37,10 +37,16 @@ class Book extends Base
         ];
         $msg   = $this->validate($this->params, $rules);
         if ($msg !== true) $this->return_msg($msg, '参数错误');
+        $cate = new Cate();
+        $cate_info = $cate->where('id',$this->params['cate_id'])->field('name')->find();
         $book  = new BookModel();
         $lists = $book->field('id,name,pid,remark,prince,number,author,picture')->where('pid', $this->params['cate_id'])->select();
         if (empty($lists)) $this->return_msg('20004', '该分类下暂无商品信息');
-        $this->return_msg('00000', '查询成功', $lists);
+        $res_arr = [
+            'cate_name' => $cate_info['name'],
+            'book_lists' => $lists,
+        ];
+        $this->return_msg('00000', '查询成功', $res_arr);
     }
 
     /***

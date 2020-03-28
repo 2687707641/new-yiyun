@@ -91,9 +91,7 @@ class User extends Base
     {
         $user = new UserModel();
         //获取登录用户
-        $session_user = Session::get('user');
-        if (empty($session_user))
-            $this->return_msg('10010', '请登录后操作');
+        $session_user = $this->get_user_info();
         //检查参数
         $rules = [
             ['used_password', 'require', '10001'],
@@ -105,7 +103,7 @@ class User extends Base
         $info = $user->field('id,password')->where('phone', $session_user['phone'])->find();
         //校对信息
         if (md5($this->params['used_password']) !== $info['password'])
-            $this->return_msg('10011', '参数错误');
+            $this->return_msg('10011', '原密码错误');
         //更新用户信息
         $res = $user->edit(['password' => $this->params['new_password']], ['phone' => $session_user['phone']]);
         if ($res !== false) {
@@ -135,7 +133,7 @@ class User extends Base
 //        if(empty($info)) $this->return_msg(400,'未获取到登录信息,请登录后重试');
         //检查参数
         $rules = [
-            ['address', 'require|chsDash', '10001|10002'],
+            ['address', 'require|chsDash|max:50', '10001|10002|10002'],
         ];
         $msg   = $this->validate($this->params, $rules);
         if ($msg !== true) $this->return_msg($msg,'参数错误');
