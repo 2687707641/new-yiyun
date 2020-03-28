@@ -23,20 +23,20 @@ class Code extends Base
         $data = $this->request->param();
         //验证参数
         $rules = [
-            ['phone', 'require|/^1[34578]\d{9}$/', '手机号不能为空|手机号格式不正确'],
-            ['is_exist', 'require|in:0,1'],
+            ['phone', 'require|/^1[34578]\d{9}$/', '10001|10002'],
+            ['is_exist', 'require|in:0,1','10001|10002'],
         ];
         $msg   = $this->validate($data, $rules);
-        if ($msg !== true) $this->return_msg(400,$msg);
+        if ($msg !== true) $this->return_msg($msg,'参数错误');
         //检查手机号是否存在
         $user = new User();
         $res  = $user->check_exist($data['phone'], $data['is_exist']);
         if ($res !== true)
-            $this->return_msg('400', $res);
+            $this->return_msg('10000', $res);
         //检查发送频率
         $last_send_time = Session::get($data['phone'] . '_last_send_time','think');
         if($last_send_time !== null && time()-$last_send_time<= 60)
-            $this->return_msg('400','验证码60s发送一次');
+            $this->return_msg('10000','验证码60s发送一次');
         //发送验证码
         $code = $this->make_code($this->num);
         $this->send_code($data['phone'], $code);
@@ -67,12 +67,12 @@ class Code extends Base
         $msg     = $code . '为您此次的验证码，请于5分钟内填写。如非本人操作，请忽略本短信。';
         $result  = json_decode($message->send(0, '86', $phone, $msg));
         if ($result->result != 0) {
-            $this->return_msg(400, $result->errmsg);
+            $this->return_msg('10000', $result->errmsg);
         } else {
             //存储验证码及发送时间
             Session::set($phone . '_code', $code, 'think');
             Session::set($phone . '_last_send_time', time(), 'think');
-            $this->return_msg(200, '验证码已发送,60秒内只能发送一次');
+            $this->return_msg('00000', '验证码已发送,60秒内只能发送一次');
         }
     }
 }

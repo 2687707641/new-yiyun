@@ -27,7 +27,7 @@ class Base extends Controller
             'http://www.whatgoingon.cn',
             'http://whatgoingon.cn'
         ];
-        $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';  //跨域访问的时候才会存在此字段
+        $origin       = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';  //跨域访问的时候才会存在此字段
 //        header('Access-Control-Allow-Origin:http://www.whatgoingon.cn');//表示接受http://localhost:8080的请求
         if (in_array($origin, $allow_origin)) {
             header('Access-Control-Allow-Origin:' . $origin);
@@ -45,7 +45,7 @@ class Base extends Controller
         // 请求方式检测
         $this->request = $request;
 //        $this->method  = strtolower($request->method());
-        $this->params = json_decode($request->getInput(),true); //接收的参数
+        $this->params = json_decode($request->getInput(), true); //接收的参数
 //        $this->params = $this->check_params($data);
     }
 
@@ -73,8 +73,8 @@ class Base extends Controller
     public function check_params($arr)
     {
         //获取验证场景(验证器.控制器/方法)
-        $sence  = 'Base.' . $this->request->controller() . '/' . $this->request->action();
-        if($sence == 'Base.User/look_session')
+        $sence = 'Base.' . $this->request->controller() . '/' . $this->request->action();
+        if ($sence == 'Base.User/look_session')
             return $arr;
         $this->validater = $this->validate($arr, $sence);
         if (true !== $this->validater) {
@@ -89,7 +89,28 @@ class Base extends Controller
     public function get_user_info()
     {
         $info = Session::get('user');
-        if(empty($info)) $this->return_msg(400,'未获取到登录信息');
+        if (empty($info)) $this->return_msg('10010', '未获取到登录信息');
         return $info;
     }
+
+    /***
+     * 生成36位uuid
+     * @return string 32位uuid
+     */
+    public function get_uuid()
+    {
+        if (function_exists('com_create_guid')) {
+            return com_create_guid();
+        }
+        mt_srand((double)microtime() * 10000);//optional for php 4.2.0 and up.
+        $charid = strtoupper(md5(uniqid(rand(), true)));
+        $hyphen = chr(45);// "-"
+        $uuid   = substr($charid, 0, 8) . $hyphen
+            . substr($charid, 8, 4) . $hyphen
+            . substr($charid, 12, 4) . $hyphen
+            . substr($charid, 16, 4) . $hyphen
+            . substr($charid, 20, 12);
+        return $uuid;
+    }
+
 }

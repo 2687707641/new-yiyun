@@ -21,9 +21,9 @@ class Book extends Base
         $cate = new Cate();
         $data = $cate->cate_tree();
         if (!empty($data)) {
-            $this->return_msg(200, '查询成功', $data);
+            $this->return_msg('00000', '查询成功', $data);
         } else {
-            $this->return_msg(400, '查询失败', $data);
+            $this->return_msg('20004', '查询失败', $data);
         }
     }
 
@@ -33,14 +33,14 @@ class Book extends Base
     public function get_book()
     {
         $rules = [
-            ['cate_id', 'require|number', '分类ID不能为空|参数格式错误']
+            ['cate_id', 'require|number', '10001|10002']
         ];
         $msg   = $this->validate($this->params, $rules);
-        if ($msg !== true) $this->return_msg(400, $msg);
+        if ($msg !== true) $this->return_msg($msg, '参数错误');
         $book  = new BookModel();
         $lists = $book->field('id,name,pid,remark,prince,number,author,picture')->where('pid', $this->params['cate_id'])->select();
-        if (empty($lists)) $this->return_msg(400, '该分类下暂无商品信息');
-        $this->return_msg(200, '查询成功', $lists);
+        if (empty($lists)) $this->return_msg('20004', '该分类下暂无商品信息');
+        $this->return_msg('00000', '查询成功', $lists);
     }
 
     /***
@@ -50,8 +50,8 @@ class Book extends Base
     {
         $book  = new BookModel();
         $lists = $book->field('id,name,remark,prince,number,author,picture,sales')->order('sales desc')->limit(0, 8)->select();
-        if (empty($lists)) $this->return_msg(400, '该分类下暂无商品信息');
-        $this->return_msg(200, '查询成功', $lists);
+        if (empty($lists)) $this->return_msg('20004', '该分类下暂无商品信息');
+        $this->return_msg('00000', '查询成功', $lists);
     }
 
     /***
@@ -77,7 +77,8 @@ class Book extends Base
             $book_info                = $book->where($where)->field('id,name,prince,picture')->order('sales desc')->limit(1)->select();
             $res_arr[$k]['book_info'] = $book_info;
         }
-        $this->return_msg(200, '查询成功', $res_arr);
+        if(empty($res_arr)) $this->return_msg('20004', '暂无数据',[]);
+        $this->return_msg('00000', '查询成功', $res_arr);
     }
 
     /***
@@ -86,10 +87,10 @@ class Book extends Base
     public function book_details()
     {
         $rules = [
-            ['book_id', 'require|number', '商品ID不能为空|参数错误'],
+            ['book_id', 'require|number', '10001|10002'],
         ];
         $msg   = $this->validate($this->params, $rules);
-        if ($msg !== true) $this->return_msg(400, $msg);
+        if ($msg !== true) $this->return_msg($msg, '参数错误');
         $book  = new BookModel();
         $where = [
             'b.id' => $this->params['book_id'],
@@ -98,7 +99,7 @@ class Book extends Base
         $book_info = $book->alias('b')->join('cate c', 'b.pid = c.id')->where($where)
             ->field('b.id,b.name,b.remark,b.pid,b.prince,b.number,b.author,b.picture,b.sales,c.name cate_name')
             ->find();
-        if (empty($book_info)) $this->return_msg(400, '暂无信息', []);
+        if (empty($book_info)) $this->return_msg('20004', '暂无信息', []);
         //查询该分类下的其他商品信息
         $where       = [
             'pid' => $book_info['pid'],
@@ -109,6 +110,6 @@ class Book extends Base
             'book_details' => $book_info,
             'others'       => $others_info,
         ];
-        $this->return_msg(200, '查询成功', $res_arr);
+        $this->return_msg('00000', '查询成功', $res_arr);
     }
 }

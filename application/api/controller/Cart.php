@@ -22,11 +22,11 @@ class Cart extends Base
         $user_info = $this->get_user_info();
         //参数验证
         $rules = [
-            ['book_id', 'require|number', '商品ID不能为空|参数错误'],
-            ['number', 'require|/^[+]{0,1}(\d+)$/', '商品数量不能为空|商品数量只能为正整数']
+            ['book_id', 'require|number', '10001|10002'],
+            ['number', 'require|/^[+]{0,1}(\d+)$/', '10001|10002']
         ];
         $msg   = $this->validate($this->params, $rules);
-        if ($msg !== true) $this->return_msg(400, $msg);
+        if ($msg !== true) $this->return_msg($msg, '参数错误');
         //查询购物车列表
         $cart      = new CartModel();
         $where     = [
@@ -43,9 +43,9 @@ class Cart extends Base
             $res = $cart->edit(['number' => $num], $where);
         }
         if ($res !== false) {
-            $this->return_msg(200, '添加至购物车成功!');
+            $this->return_msg('00000', '添加至购物车成功!');
         } else {
-            $this->return_msg(500, '添加至购物车失败!');
+            $this->return_msg('20001', '添加至购物车失败!');
         }
     }
 
@@ -62,7 +62,7 @@ class Cart extends Base
             'uid' => $user_info['id'],
         ];
         $cart_info = $cart->field('id,book_id,number')->where($where)->select();
-        if(empty($cart_info)) $this->return_msg(400,'无购物车数据',[]);
+        if(empty($cart_info)) $this->return_msg('20004','无购物车数据',[]);
         $res_arr   = [];
         $book      = new BookModel();
         foreach ($cart_info as $k => $v) {
@@ -73,7 +73,7 @@ class Cart extends Base
             $res_arr[$k]['picture']  = $book_info['picture']; //商品封面图
             $res_arr[$k]['discount'] = $book_info['discount']; //商品折扣
         }
-        $this->return_msg(200, '查询成功', $res_arr);
+        $this->return_msg('00000', '查询成功', $res_arr);
     }
 
     /***
@@ -85,10 +85,10 @@ class Cart extends Base
         $user_info = $this->get_user_info();
         //检查参数
         $rules = [
-            ['book_id', 'require|number', '商品ID不能为空|参数错误'],
+            ['book_id', 'require|number', '10001|10002'],
         ];
         $msg   = $this->validate($this->params, $rules);
-        if ($msg !== true) $this->return_msg(400, $msg);
+        if ($msg !== true) $this->return_msg($msg, '参数错误');
         $cart = new CartModel();
         $where     = [
             'uid'     => $user_info['id'],
@@ -96,9 +96,9 @@ class Cart extends Base
         ];
         $res = $cart->del($where);
         if($res !== false){
-            $this->return_msg(200,'删除成功');
+            $this->return_msg('00000','删除购物车成功');
         }else{
-            $this->return_msg(400,'删除失败');
+            $this->return_msg('20003','删除购物车失败');
         }
     }
 
@@ -112,6 +112,6 @@ class Cart extends Base
         $cart = new CartModel();
         $num = $cart->where('uid',$user_info['id'])->sum('number');
         $arr['num'] = $num;
-        $this->return_msg(200,'查询成功',$arr);
+        $this->return_msg('00000','查询成功',$arr);
     }
 }
