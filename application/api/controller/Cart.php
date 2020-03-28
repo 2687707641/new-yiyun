@@ -66,7 +66,7 @@ class Cart extends Base
         $res_arr = [];
         $book    = new BookModel();
         foreach ($cart_info as $k => $v) {
-            $res_arr[$k]['id']       = $v['id']; //商品ID
+            $res_arr[$k]['id']       = $v['book_id']; //商品ID
             $res_arr[$k]['number']   = $v['number'];//购物车中该商品数量
             $book_info               = $book->where('id', $v['id'])->field('name,picture,discount,prince')->find();
             $res_arr[$k]['name']     = $book_info['name']; //商品名称
