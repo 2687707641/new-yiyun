@@ -57,3 +57,17 @@ Route::post('cart/clear_cart','api/cart/clear_cart');
 //查看购物车数量
 Route::get('cart/get_cart_items','api/cart/get_cart_items');
 
+/***
+ * 订单相关
+ */
+//单个商品购买
+Route::post('order/generate_order','api/order/generate_order');
+
+//多个商品购买,购物车购买
+Route::post('order/cart_purchase','api/order/cart_purchase');
+
+//查看订单列表
+Route::get('order/get_order_list','api/order/get_order_list');
+
+//查看订单详情
+Route::post('order/order_details','api/order/order_details');
