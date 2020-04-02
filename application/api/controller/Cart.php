@@ -65,6 +65,8 @@ class Cart extends Base
         if (empty($cart_info)) $this->return_msg('20004', '无购物车数据', []);
         $res_arr = [];
         $book    = new BookModel();
+        //计算总价
+        $totol = 0;
         foreach ($cart_info as $k => $v) {
             $res_arr[$k]['id']       = $v['book_id']; //商品ID
             $res_arr[$k]['number']   = $v['number'];//购物车中该商品数量
@@ -73,7 +75,9 @@ class Cart extends Base
             $res_arr[$k]['prince']   = $book_info['prince']; //商品单价
             $res_arr[$k]['picture']  = $book_info['picture']; //商品封面图
             $res_arr[$k]['discount'] = $book_info['discount']; //商品折扣
+            $totol +=  $res_arr[$k]['prince'] * $res_arr[$k]['discount'] * 0.1;
         }
+        $res_arr['totol'] = number_format($totol,2);//保留2位小数
         $this->return_msg('00000', '查询成功', $res_arr);
     }
 

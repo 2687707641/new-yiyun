@@ -64,7 +64,7 @@ Route::get('cart/get_cart_items','api/cart/get_cart_items');
 Route::post('order/generate_order','api/order/generate_order');
 
 //多个商品购买,购物车购买
-Route::post('order/cart_purchase','api/order/cart_purchase');
+Route::get('order/cart_purchase','api/order/cart_purchase');
 
 //查看订单列表
 Route::get('order/get_order_list','api/order/get_order_list');
