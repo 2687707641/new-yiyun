@@ -105,7 +105,7 @@ class User extends Base
         if (md5($this->params['used_password']) !== $info['password'])
             $this->return_msg('10011', '原密码错误');
         //更新用户信息
-        $res = $user->edit(['password' => $this->params['new_password']], ['phone' => $session_user['phone']]);
+        $res = $user->edit(['password' => md5($this->params['new_password'])], ['phone' => $session_user['phone']]);
         if ($res !== false) {
             $this->return_msg('00000', '修改密码成功!');
         } else {
@@ -129,8 +129,6 @@ class User extends Base
     {
         //获取登录用户
         $info = $this->get_user_info();
-//        $info = Session::get('user');
-//        if(empty($info)) $this->return_msg(400,'未获取到登录信息,请登录后重试');
         //检查参数
         $rules = [
             ['address', 'require|chsDash|max:50', '10001|10002|10002'],
