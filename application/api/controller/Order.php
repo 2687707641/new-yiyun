@@ -139,7 +139,7 @@ class Order extends Base
             $cart_arr[$k]['remark']   = $book_info['remark']; //商品描述
             $cart_arr[$k]['sales']    = $book_info['sales']; //商品销量
             $cart_arr[$k]['stock']    = $book_info['number']; //商品库存
-            $totol                    += $cart_arr[$k]['prince'] * $cart_arr[$k]['discount'] * 0.1;//计算价格
+            $totol                    += $cart_arr[$k]['prince'] * $cart_arr[$k]['discount'] * 0.1 * $cart_arr[$k]['number'];//计算价格
         }
         $totol = number_format($totol, 2);//保留2位小数
         $uuid  = $this->get_uuid(); //生成订单号
