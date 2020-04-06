@@ -138,10 +138,21 @@ class User extends Base
         $user = new UserModel();
         $res = $user->edit(['address'=>$this->params['address']],['id'=>$info['id']]);
         if ($res !== false) {
+            //修改session
+            $info['address'] = $this->params['address'];
+            Session::set('user', $info);
             $this->return_msg('00000', '编辑收货地址成功!');
         } else {
             $this->return_msg('20002', '编辑收货地址失败!');
         }
     }
-
+    
+    /***
+     * 用户登出
+     */
+    public function logout()
+    {
+        Session::clear();
+        $this->return_msg('00000', '用户已注销!');
+    }
 }

@@ -23,6 +23,8 @@ Route::post('user/change_pwd','api/user/change_pwd');
 //用户修改收货地址
 Route::post('user/receiving_address','api/user/receiving_address');
 
+//用户登出
+Route::get('user/logout','api/user/logout');
 /***
  * 商品接口
  */

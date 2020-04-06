@@ -5,6 +5,7 @@ namespace app\api\controller;
 
 use app\api\model\Cart as CartModel;
 use app\admin\model\Book as BookModel;
+use think\Session;
 
 /***
  * 购物车相关
@@ -113,10 +114,12 @@ class Cart extends Base
     public function get_cart_items()
     {
         //获取登录用户信息
-        $user_info  = $this->get_user_info();
-        $cart       = new CartModel();
-        $num        = $cart->where('uid', $user_info['id'])->sum('number');
+        $num        = 0;
         $arr['num'] = $num;
+        $user_info  = Session::get('user');
+        if (empty($info)) $this->return_msg('00000', '用户未登录', $arr);
+        $cart = new CartModel();
+        $num  = $cart->where('uid', $user_info['id'])->sum('number');
         $this->return_msg('00000', '查询成功', $arr);
     }
 }
