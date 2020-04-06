@@ -76,7 +76,7 @@ class Cart extends Base
             $res_arr[$k]['prince']   = $book_info['prince']; //商品单价
             $res_arr[$k]['picture']  = $book_info['picture']; //商品封面图
             $res_arr[$k]['discount'] = $book_info['discount']; //商品折扣
-            $totol +=  $res_arr[$k]['prince'] * $res_arr[$k]['discount'] * 0.1;
+            $totol +=  $res_arr[$k]['prince'] * $res_arr[$k]['discount'] * 0.1 * $res_arr[$k]['number'];
         }
         $res_arr['totol'] = number_format($totol,2);//保留2位小数
         $this->return_msg('00000', '查询成功', $res_arr);
