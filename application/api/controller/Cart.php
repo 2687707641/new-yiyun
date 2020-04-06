@@ -119,7 +119,7 @@ class Cart extends Base
         $user_info  = Session::get('user');
         if (empty($user_info)) $this->return_msg('00000', '用户未登录', $arr);
         $cart = new CartModel();
-        $num  = $cart->where('uid', $user_info['id'])->sum('number');
+        $arr['num']  = $cart->where('uid', $user_info['id'])->sum('number');
         $this->return_msg('00000', '查询成功', $arr);
     }
 }
