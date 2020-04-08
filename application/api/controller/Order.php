@@ -108,6 +108,10 @@ class Order extends Base
         if ($msg !== true) $this->return_msg($msg, '参数错误');
         $details    = new OrderDetails();
         $order_info = $details->where('uuid', $this->params['uuid'])->select();
+        switch ($order_info['status']){
+            case '2' : $order_info['status'] = '待发货';
+            default: $order_info['status'] = '已发货';
+        }
         if (empty($order_info)) $this->return_msg('20004', '暂无数据');
         $this->return_msg('00000', '查询成功', $order_info);
     }
