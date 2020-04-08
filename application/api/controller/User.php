@@ -26,7 +26,7 @@ class User extends Base
             ['code', 'require|number|length:6', '10001|10002|10002'],
         ];
         $msg   = $this->validate($this->params, $rules);
-        if ($msg !== true) $this->return_msg($msg,'参数错误');
+        if ($msg !== true) $this->return_msg($msg, '参数错误');
         //检查用户(手机号)是否存在
         $user = new UserModel();
         $res  = $user->check_exist($this->params['phone'], 0);
@@ -72,7 +72,7 @@ class User extends Base
             ['password', 'require|length:6,20', '10001|10002'],
         ];
         $msg   = $this->validate($this->params, $rules);
-        if ($msg !== true) $this->return_msg($msg,'参数错误');
+        if ($msg !== true) $this->return_msg($msg, '参数错误');
         $user = new UserModel();
         $info = $user->field('id,phone,password,nickname,address')->where('phone', $this->params['phone'])->find();
         if ($info['password'] !== md5($this->params['password'])) {
@@ -98,7 +98,7 @@ class User extends Base
             ['new_password', 'require|length:6,20|confirm', '10001|10002|10002'],
         ];
         $msg   = $this->validate($this->params, $rules);
-        if ($msg !== true) $this->return_msg($msg,'参数错误');
+        if ($msg !== true) $this->return_msg($msg, '参数错误');
         //查询用户信息
         $info = $user->field('id,password')->where('phone', $session_user['phone'])->find();
         //校对信息
@@ -134,19 +134,19 @@ class User extends Base
             ['address', 'require|chsDash|max:50', '10001|10002|10002'],
         ];
         $msg   = $this->validate($this->params, $rules);
-        if ($msg !== true) $this->return_msg($msg,'参数错误');
+        if ($msg !== true) $this->return_msg($msg, '参数错误');
         $user = new UserModel();
-        $res = $user->edit(['address'=>$this->params['address']],['id'=>$info['id']]);
+        $res  = $user->edit(['address' => $this->params['address']], ['id' => $info['id']]);
         if ($res !== false) {
             //修改session
             $info['address'] = $this->params['address'];
             Session::set('user', $info);
-            $this->return_msg('00000', '编辑收货地址成功!');
+            $this->return_msg('00000', '编辑收货地址成功!', $info);
         } else {
             $this->return_msg('20002', '编辑收货地址失败!');
         }
     }
-    
+
     /***
      * 用户登出
      */
@@ -154,5 +154,33 @@ class User extends Base
     {
         Session::clear();
         $this->return_msg('00000', '用户已注销!');
+    }
+
+    /***
+     * 用户找回密码
+     */
+    public function find_pwd()
+    {
+        $rules = [
+            ['phone', 'require|/^1[34578]\d{9}$/', '10001|10002'],
+            ['code', 'require|number|length:6', '10001|10002|10002'],
+            ['password', 'require|length:6,20|confirm', '10001|10002|10002'],
+        ];
+        $msg   = $this->validate($this->params, $rules);
+        if ($msg !== true) $this->return_msg($msg, '参数错误');
+        //检查用户(手机号)是否存在
+        $user = new UserModel();
+        $res  = $user->check_exist($this->params['phone'], 1);
+        if ($res !== true)
+            $this->return_msg('10000', $res);
+        //检查验证码
+        $this->check_code($this->params['phone'], $this->params['code']);
+        $this->params['password'] = md5($this->params['password']);
+        $res                      = $user->edit(['password' => md5($this->params['password'])], ['phone' => $this->params['phone']]);
+        if ($res !== false) {
+            $this->return_msg('00000', '修改密码成功!');
+        } else {
+            $this->return_msg('20002', '修改密码失败!');
+        }
     }
 }

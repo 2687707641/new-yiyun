@@ -37,13 +37,13 @@ class Book extends Base
         ];
         $msg   = $this->validate($this->params, $rules);
         if ($msg !== true) $this->return_msg($msg, '参数错误');
-        $cate = new Cate();
-        $cate_info = $cate->where('id',$this->params['cate_id'])->field('name')->find();
-        $book  = new BookModel();
-        $lists = $book->field('id,name,pid,remark,prince,number,author,picture')->where('pid', $this->params['cate_id'])->select();
+        $cate      = new Cate();
+        $cate_info = $cate->where('id', $this->params['cate_id'])->field('name')->find();
+        $book      = new BookModel();
+        $lists     = $book->field('id,name,pid,remark,prince,number,author,picture')->where('pid', $this->params['cate_id'])->select();
         if (empty($lists)) $this->return_msg('20004', '该分类下暂无商品信息');
         $res_arr = [
-            'cate_name' => $cate_info['name'],
+            'cate_name'  => $cate_info['name'],
             'book_lists' => $lists,
         ];
         $this->return_msg('00000', '查询成功', $res_arr);
@@ -83,7 +83,7 @@ class Book extends Base
             $book_info                = $book->where($where)->field('id,name,prince,picture')->order('sales desc')->limit(1)->select();
             $res_arr[$k]['book_info'] = $book_info;
         }
-        if(empty($res_arr)) $this->return_msg('20004', '暂无数据',[]);
+        if (empty($res_arr)) $this->return_msg('20004', '暂无数据', []);
         $this->return_msg('00000', '查询成功', $res_arr);
     }
 
@@ -117,5 +117,26 @@ class Book extends Base
             'others'       => $others_info,
         ];
         $this->return_msg('00000', '查询成功', $res_arr);
+    }
+
+    /***
+     * 商品搜索
+     */
+    public function book_search()
+    {
+        $rules = [
+            ['name', 'require', '10001'],
+        ];
+        $msg   = $this->validate($this->params, $rules);
+        if ($msg !== true) $this->return_msg($msg, '参数错误');
+        $book  = new BookModel();
+        $where = [
+            'name'    => ['like', '%' . $this->params['name'] . '%'],
+            'status'  => '1',
+            'deleted' => '0',
+        ];
+        $lists = $book->where($where)->field('status,deleted,create_time,update_time',true)->select();
+        if (empty($lists)) $this->return_msg('20004', '暂无数据', []);
+        $this->return_msg('00000', '查询成功', $lists);
     }
 }

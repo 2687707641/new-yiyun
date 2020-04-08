@@ -25,6 +25,9 @@ Route::post('user/receiving_address','api/user/receiving_address');
 
 //用户登出
 Route::get('user/logout','api/user/logout');
+
+//用户找回密码
+Route::post('user/find_pwd','api/user/find_pwd');
 /***
  * 商品接口
  */
@@ -43,7 +46,8 @@ Route::get('book/navigation_bar','api/book/navigation_bar');
 //获取商品详情
 Route::post('book/book_details','api/book/book_details');
 
-
+//获取商品详情
+Route::post('book/book_search','api/book/book_search');
 /***
  * 购物车相关
  */

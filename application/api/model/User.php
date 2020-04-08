@@ -21,7 +21,7 @@ class User extends Base
             /*        手机号应该在数据库中    */
             case '1' :
                 if(!$res)
-                    return '此手机号不存在!';
+                    return '此手机号不存在或未注册!';
                 return true;
                 break;
         }
