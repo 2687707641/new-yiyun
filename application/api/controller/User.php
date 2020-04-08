@@ -176,7 +176,7 @@ class User extends Base
         //检查验证码
         $this->check_code($this->params['phone'], $this->params['code']);
         $this->params['password'] = md5($this->params['password']);
-        $res                      = $user->edit(['password' => md5($this->params['password'])], ['phone' => $this->params['phone']]);
+        $res                      = $user->edit(['password' => $this->params['password']], ['phone' => $this->params['phone']]);
         if ($res !== false) {
             $this->return_msg('00000', '修改密码成功!');
         } else {

@@ -77,3 +77,12 @@ Route::get('order/get_order_list','api/order/get_order_list');
 
 //查看订单详情
 Route::post('order/order_details','api/order/order_details');
+
+/***
+ * 评论相关
+ */
+//发表评论
+Route::post('message/leave_message','api/message/leave_message');
+
+//查看评论
+Route::post('message/view_message','api/message/view_message');
