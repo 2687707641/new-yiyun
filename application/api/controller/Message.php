@@ -5,6 +5,7 @@ namespace app\api\controller;
 
 use app\api\model\Message as MessageModel;
 use app\api\model\User;
+use app\api\model\OrderDetails;
 /***
  * 商品留言相关
  * Class Message
@@ -51,9 +52,18 @@ class Message extends Base
             ['book_id', 'require|number', '10001|10002'],
             ['pid', 'require|number', '10001|10002'],
             ['message', 'require|max:200', '10001|10002'],
+            ['stars', 'require|number|between:1,5', '10001|10002|10002'],
         ];
         $msg   = $this->validate($this->params, $rules);
         if ($msg !== true) $this->return_msg($msg, '参数错误');
+        //购物后才能评论
+        $order_details = new OrderDetails();
+        $where = [
+            'book_id' => $this->params['book_id'],
+            'user_id' => $user_info['id'],
+        ];
+        $wheter_to_buy = $order_details->where($where)->find();
+        if(empty($wheter_to_buy)) $this->return_msg('10000','未购买不能评论');
         $this->params['message'] = $this->replace_words($this->sensitive_words, $this->params['message']);
         $message                 = new MessageModel();
         $this->params['uid']     = $user_info['id'];
@@ -89,7 +99,8 @@ class Message extends Base
         foreach ($message_info as $k => $v) {
             $res_arr[$k]['id'] = $v['id'];//评论ID
             $res_arr[$k]['message'] = $v['message'];//评论ID
-            $res_arr[$k]['create_time'] = $v['create_time'];//评论ID
+            $res_arr[$k]['create_time'] = $v['create_time'];//评论时间
+            $res_arr[$k]['star'] = $v['star'];//评论星级
             $user_info = $user->where('id',$v['uid'])->find();
             $res_arr[$k]['user_name'] = $user_info['nickname']; //评论用户昵称
         }

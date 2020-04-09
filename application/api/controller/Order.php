@@ -158,6 +158,8 @@ class Order extends Base
                 //添加订单详情
                 $order_details::create([
                     'uuid'     => $uuid,
+                    'book_id'     => $v['id'],
+                    'user_id'     => $user_info['id'],
                     'number'   => $v['number'],
                     'name'     => $v['name'],
                     'price'    => $v['prince'],
