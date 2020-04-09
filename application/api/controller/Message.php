@@ -100,7 +100,7 @@ class Message extends Base
             $res_arr[$k]['id'] = $v['id'];//评论ID
             $res_arr[$k]['message'] = $v['message'];//评论ID
             $res_arr[$k]['create_time'] = $v['create_time'];//评论时间
-            $res_arr[$k]['star'] = $v['star'];//评论星级
+            $res_arr[$k]['stars'] = $v['stars'];//评论星级
             $user_info = $user->where('id',$v['uid'])->find();
             $res_arr[$k]['user_name'] = $user_info['nickname']; //评论用户昵称
         }
