@@ -153,6 +153,9 @@ class Base extends Controller
                 case 'nickname':
                     $where['nickname'] = ['like', '%' . $v . '%'];
                     break;
+                case 'uuid':
+                    $where['uuid'] = ['like', '%' . $v . '%'];
+                    break;
             }
         }
         $where['create_time'] = ['between time', $between_time];

@@ -95,7 +95,7 @@ class Base extends Controller
 
     /***
      * 生成36位uuid
-     * @return string 32位uuid
+     * @return string 36位uuid
      */
     public function get_uuid()
     {
