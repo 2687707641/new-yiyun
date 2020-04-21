@@ -64,7 +64,7 @@ class User extends Base
             $this->error($this->_param['status'] == 0 ? '禁用失败' : '启用失败');
         } else {
             $str = $this->_param['status'] == 0 ? '禁用' : '启用';
-            log_write($str . '管理员:' . $this->_param['name'], $user->getLastSql());
+            log_write($str . '用户:' . $this->_param['name'], $user->getLastSql());
             $this->success($this->_param['status'] == 0 ? '禁用成功' : '启用成功', 'lists');
         }
     }
@@ -90,9 +90,9 @@ class User extends Base
         if($this->request->isPost()){
             $this->check_authority();
             $rules = [
-                ['nickname','require|length:2,10|unique:user','昵称不能为空|昵称长度应在2~10个字符之间|该昵称已存在'],
+                ['nickname','require|length:2,16|unique:user','昵称不能为空|昵称长度应在2~16个字符之间|该昵称已存在'],
                 ['phone','require|/^1[3-8]{1}[0-9]{9}$/|unique:user','手机号不能为空|手机号格式不正确|该手机号已被占用'],
-                ['password', 'require|length:6,16', '密码不能为空|昵称长度应在6~16字符之间'],
+                ['password', 'require|length:6,36', '密码不能为空|密码长度应在6~36字符之间'],
             ];
             $msg = $this->validate($this->_param,$rules);
             if($msg !== true) $this->error($msg, '');
@@ -100,9 +100,9 @@ class User extends Base
             if($id){
                 //查询信息
                 $info = $user->where('id', $id)->find();
-                //判断原密码
-                if (md5($this->_param['used_pwd']) != $info['password']) {
-                    $this->error('原密码不正确');
+                //判断密码是否更改
+                if ($this->_param['password'] ==  md5($info['password'])) {
+                    $this->_param['password'] = $info['password'];
                 }
                 $res = $user->edit($this->_param,['id'=>$id]);
             }else{

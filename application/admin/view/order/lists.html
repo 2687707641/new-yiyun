@@ -82,27 +82,29 @@
                 {checkbox: true}
                 , {field: 'id', title: 'ID', sort: true}
                 , {field: 'uuid', title: '订单号'}
-                , {field: 'price', title: '总价',sort: true}
+                , {field: 'price', title: '总价', sort: true}
                 , {
                     field: 'status', title: '状态', templet: function (d) {
                         switch (d.status) {
                             case '1' :
-                                return ' <span class="layui-btn layui-btn-normal layui-btn-danger">待发货</span>'; break;
+                                return ' <span class="layui-btn layui-btn-normal layui-btn-danger">待发货</span>';
+                                break;
                             case '2' :
-                                return ' <span class="layui-btn layui-btn-normal layui-btn-normal">已发货</span>'; break;
+                                return ' <span class="layui-btn layui-btn-normal layui-btn-normal">已发货</span>';
+                                break;
                             case '3' :
-                                return ' <span class="layui-btn layui-btn-normal layui-btn">确认收货</span>'; break;
+                                return ' <span class="layui-btn layui-btn-normal layui-btn">确认收货</span>';
+                                break;
                             default:
-                                return ' <span class="layui-btn layui-btn-normal layui-btn-danger">待发货</span>';break;
+                                return ' <span class="layui-btn layui-btn-normal layui-btn-danger">待发货</span>';
+                                break;
                         }
                     }
                 }
                 , {field: 'create_time', title: '创建时间', sort: true}
                 , {
                     field: 'right', title: '操作', templet: function (d) {
-                        var str = '<a href="javascript:;" title="启用" lay-event="status"><i class="layui-icon">&#xe62f;</i></a>';
-                        if (d.status == 1)
-                            str = '<a href="javascript:;" title="禁用" lay-event="status"><i class="layui-icon">&#xe601;</i></a>';
+                        str = '<a href="javascript:;" title="查看详细" lay-event="details"><i class="layui-icon">&#xe60e;</i></a>';
                         return str +
                             '<a href="javascript:;" title="编辑" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>' +
                             '<a href="javascript:;" title="删除" lay-event="delete"><i class="layui-icon">&#xe640;</i></a>';
@@ -128,33 +130,69 @@
             console.log(obj_data);
             switch (obj.event) {
                 case 'edit':
-                    var url = '/index.php/admin/order/edit' + '?id=' + obj_data['id'];
-                    xadmin.open('编辑', url, 500, 450);
-                    break;
-                case 'delete':
-                    layer.confirm('确定要删除该用户吗?', {icon: 3, title: '确认操作'}, function (index) {
-                        var url = "{:url('user/del')}";
+                    var url = '/index.php/admin/order/change_status';
+                    layer.confirm('确认修改此订单状态吗?', {icon: 3, title: '确认操作'}, function (index) {
                         var data = {
                             id: obj_data['id'],
-                            name: obj_data['nickname'],
+                            status: obj_data['status'] == 1 ? 2 : 1,
+                            name: obj_data['uuid'],
                         };
                         _ajax_send(url, data, 'get');
                         layer.close(index); //关闭提示框
                     });
                     break;
-                case 'status':
-                    layer.confirm('确定修改此用户状态吗?', {icon: 3, title: '确认操作'}, function (index) {
-                        var url = "{:url('user/change_status')}";
+                case 'delete':
+                    layer.confirm('确定要删除该订单吗?', {icon: 3, title: '确认操作'}, function (index) {
+                        var url = "{:url('order/del')}";
                         var data = {
                             id: obj_data['id'],
-                            status: obj_data['status'] == 0 ? 1 : 0,
-                            name: obj_data['nickname'],
-                        }
+                            name: obj_data['uuid'],
+                        };
                         _ajax_send(url, data, 'get');
                         layer.close(index); //关闭提示框
                     });
                     break;
-            };
+                case 'details':
+                    //加载动画
+                    var loading = layer.load(1, {shade: [0.3, '#666666']});
+                    $.ajax({
+                        url: '/index.php/admin/order/details',
+                        data: {
+                            uuid: obj_data['uuid'],
+                        },
+                        async: true, //或false,是否异步
+                        method: "POST",
+                        timeout: 5000, //超时时间
+                        datatype: 'json',//返回的数据格式：json/xml/html/script/jsonp/text
+                        success: function (result) {
+                            //请求成功处理 result->返回数据, status->success
+                            var table = layui.table;
+                            if (result.code == 1) { //tp使用success方法
+                                layer.open({
+                                    title: '订单详情'
+                                    ,area: '300px;'
+                                    ,shade: 0.8
+                                    ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                                    ,content: '购买商品:'+ result.data['name'] +'<br>商品单价:'+ result.data['price']+'<br>商品数量:'+ result.data['number'] +'<br>用户手机号: ' + result.data['user_phone'],
+                                });
+                                console.log(result.data);
+                            } else {
+                                layer.msg(result.msg, {icon: 2, time: 1000});
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            //错误处理 xhr->详细数据, status->error, error->错误提示
+                            layer.msg('服务器出现异常,请检查后重试', {icon: 2});
+                            console.log(xhr);
+                        },
+                        complete: function () {
+                            //请求完成后
+                            layer.close(loading);
+                        }
+                    })
+                    break;
+            }
+            ;
         });
 
         //监听排序事件
@@ -191,28 +229,28 @@
         })
 
         //批量删除
-        $('.layui-btn.layui-btn-danger').on('click', function(){
+        $('.layui-btn.layui-btn-danger').on('click', function () {
             var type = $(this).data('type');
             active[type] ? active[type].call(this) : '';
         });
 
         var active = {
-            del_all:function () {
+            del_all: function () {
                 //获取复选框数据
                 var checkStatus = table.checkStatus('idTest')
-                    ,checkData = checkStatus.data; //得到选中的数据
-                if(checkData.length === 0){
+                    , checkData = checkStatus.data; //得到选中的数据
+                if (checkData.length === 0) {
                     return layer.msg('请选择数据');
                 }
                 console.log(checkData);
                 layer.confirm('确定要删除吗?', {icon: 3, title: '确认操作'}, function (index) {
-                    var ids =[];
-                    var names =[];
-                    for(let i in checkData){
+                    var ids = [];
+                    var names = [];
+                    for (let i in checkData) {
                         ids.push(checkData[i].id);
-                        names.push(checkData[i].nickname);
+                        names.push(checkData[i].uuid);
                     }
-                    var url = "{:url('user/del')}";
+                    var url = "{:url('order/del')}";
                     var data = {
                         id: ids,
                         name: names,

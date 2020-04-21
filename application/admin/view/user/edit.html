@@ -32,25 +32,25 @@
                     <span class="x-red">*</span>必填
                 </div>
             </div>
-            <div class="layui-form-item" {if !isset($info['id'])}style="display:none"{/if}>
-                <label for="used_pwd" class="layui-form-label">
-                    <span class="x-red">*</span>原密码
-                </label>
-                <div class="layui-input-inline">
-                    <input type="password"  name="used_pwd" id="used_pwd"
-                           autocomplete="off" class="layui-input">
-                </div>
-                <div class="layui-form-mid layui-word-aux">
-                    6到16个字符
-                </div>
-            </div>
+<!--            <div class="layui-form-item" {if !isset($info['id'])}style="display:none"{/if}>-->
+<!--                <label for="used_pwd" class="layui-form-label">-->
+<!--                    <span class="x-red">*</span>原密码-->
+<!--                </label>-->
+<!--                <div class="layui-input-inline">-->
+<!--                    <input type="password"  name="used_pwd" id="used_pwd"-->
+<!--                           autocomplete="off" class="layui-input">-->
+<!--                </div>-->
+<!--                <div class="layui-form-mid layui-word-aux">-->
+<!--                    6到16个字符-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="layui-form-item">
                 <label for="L_pass" class="layui-form-label">
                     <span class="x-red">*</span>{if isset($info['id'])}新{/if}密码
                 </label>
                 <div class="layui-input-inline">
                     <input type="password" id="L_pass" name="password" required="" lay-verify="pass"
-                           autocomplete="off" class="layui-input">
+                           autocomplete="off" class="layui-input" value="{$info['password']|default=''}" >
                 </div>
                 <div class="layui-form-mid layui-word-aux">
                     6到16个字符
@@ -62,7 +62,7 @@
                 </label>
                 <div class="layui-input-inline">
                     <input type="password" id="L_repass" name="used_pwd" required="" lay-verify="repass"
-                           autocomplete="off" class="layui-input">
+                           autocomplete="off" class="layui-input" value="{$info['password']|default=''}">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -87,7 +87,7 @@
         form.verify({
             name: function(value) {
                 if (value.length < 2 || value > 10) {
-                    return '规则名称长度在3~10字符之间';
+                    return '昵称长度在2~16字符之间';
                 }
             },
             pass: [/(.+){6,16}$/, '密码必须6到16位'],

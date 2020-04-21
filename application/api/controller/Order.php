@@ -174,7 +174,7 @@ class Order extends Base
                 'uuid'    => $uuid,
                 'user_id' => $user_info['id'],
                 'price'   => $totol,
-                'status'  => '2',
+                'status'  => '1',
                 'address' => $user_info['address'],
             ];
             $order->add($data);
