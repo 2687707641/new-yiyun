@@ -14,7 +14,7 @@ class Base extends Model
 {
 
     //定义公共参数
-    protected $_deleted = false; //是否从数据库中删除(不删除的情况下)
+    protected $_deleted = true; //是否从数据库中删除(不删除的情况下)
 
     /***
      * 单个添加
